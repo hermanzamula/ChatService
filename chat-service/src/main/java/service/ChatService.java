@@ -38,6 +38,10 @@ public class ChatService {
             return false;
         }
 
+        if(USER_LIST.contains(user)){
+            return false;
+        }
+
         if (user.getPassword().equalsIgnoreCase(password)) {
             USER_LIST.add(user);
             return true;

@@ -4,14 +4,14 @@ import java.util.Date;
 
 public class PrivateMessage extends Message {
 
-    private Long recipientId;
+    private User recipient;
 
-    public PrivateMessage(Long messageId, String text, User senderId, Date postedAt, Long recipientId) {
-        super(messageId, text, senderId, postedAt);
-        this.recipientId = recipientId;
+    public PrivateMessage(Long messageId, String text, User sender, User recipient, Date postedAt) {
+        super(messageId, text, sender, postedAt);
+        this.recipient = recipient;
     }
 
-    public Long getRecipientId() {
-        return recipientId;
+    public User getRecipient() {
+        return recipient;
     }
 }

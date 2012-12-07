@@ -2,6 +2,7 @@ package controller;
 
 import controller.dto.MessagePostRequest;
 import controller.dto.MessageResponse;
+import controller.dto.PrivateMessagePostRequest;
 import data.Message;
 import data.User;
 import org.apache.log4j.Logger;
@@ -50,12 +51,26 @@ public class MessageController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public void postMessage(@RequestBody MessagePostRequest request) throws ChatServiceException {
+    public void postPublicMessage(@RequestBody MessagePostRequest request) throws ChatServiceException {
         LOGGER.debug("Posting message: " + request);
 
         final User user = service.findUser(request.getUsername());
         final Long uniqueIndex = createUniqueIndex();
         service.postMessage(fromRequest(request, user, uniqueIndex));
     }
+
+    @RequestMapping(value = "/private", method = RequestMethod.POST)
+    @ResponseStatus(value = HttpStatus.OK)
+    public void postPrivateMessage(@RequestBody PrivateMessagePostRequest request) throws ChatServiceException {
+        LOGGER.debug("Post private message: " + request);
+
+        final User user = service.findUser(request.getUsername());
+        final User recipient = service.findUser(request.getRecipient());
+        final Long uniqueIndex = createUniqueIndex();
+        final Message message = fromPrivateRequest(request, user, recipient, uniqueIndex);
+
+        service.postMessage(message);
+    }
+
 
 }

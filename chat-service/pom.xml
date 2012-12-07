@@ -1,15 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.teamdev.stuedents.service.chat</groupId>
+    <groupId>com.teamdev.students.service.chat</groupId>
     <artifactId>chat-service</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
-    <modules>
-        <module>DataModel</module>
-        <module>Controller</module>
-        <module>DataStorage</module>
-    </modules>
+
     <name>chat-service Maven Webapp</name>
     <url>http://maven.apache.org</url>
 
@@ -17,17 +13,22 @@
         <spring.version>3.0.5.RELEASE</spring.version>
     </properties>
 
+    <modules>
+        <module>DataModel</module>
+        <module>Controller</module>
+        <module>DataStorage</module>
+    </modules>
 
     <dependencies>
 
         <dependency>
-            <groupId>com.teamdev.stuedents.service.chat</groupId>
+            <groupId>com.teamdev.students.service.chat</groupId>
             <artifactId>DataModel</artifactId>
             <version>1.0</version>
         </dependency>
 
         <dependency>
-            <groupId>com.teamdev.stuedents.service.chat</groupId>
+            <groupId>com.teamdev.students.service.chat</groupId>
             <artifactId>DataStorage</artifactId>
             <version>1.0</version>
         </dependency>
@@ -71,7 +72,6 @@
         </dependency>
 
         <!-- Logging libs -->
-
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>

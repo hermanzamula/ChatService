@@ -11,7 +11,7 @@ public class MessageStorageImpl implements MessageStorage {
     /**
      * First param - data.Message id, second -  message itself
      */
-    private  Map<Long, Message> messageMap = new HashMap<Long, Message>();
+    private Map<Long, Message> messageMap = new HashMap<Long, Message>();
 
     @Override
     public Collection<Message> getHistory() {

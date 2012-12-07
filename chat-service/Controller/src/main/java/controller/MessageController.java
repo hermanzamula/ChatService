@@ -67,10 +67,9 @@ public class MessageController {
         final User user = service.findUser(request.getUsername());
         final User recipient = service.findUser(request.getRecipient());
         final Long uniqueIndex = createUniqueIndex();
+
         final Message message = fromPrivateRequest(request, user, recipient, uniqueIndex);
 
         service.postMessage(message);
     }
-
-
 }

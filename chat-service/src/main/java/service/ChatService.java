@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import storage.MessageStorage;
 import storage.MessageStorageImpl;
 import storage.UserStorage;
+import storage.UserStorageImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +16,11 @@ import java.util.List;
 public class ChatService {
 
     private static final MessageStorage MESSAGE_STORAGE = new MessageStorageImpl();
-    private static final UserStorage USER_STORAGE = new UserStorage();
+
+    //
+    private static final UserStorage USER_STORAGE = new UserStorageImpl();
+
+    //List of users that enter to chat
     private static final List<User> USER_LIST = new ArrayList<User>();
 
     public Message findMessage(final Long idMessage) {
@@ -27,8 +32,7 @@ public class ChatService {
     }
 
     /**
-     *
-     * @return: true, if such user exists in data storage, false - no such user exists
+     * @return true, if such user exists in data storage, false - no such user exists
      */
     public boolean enterChat(final String username, final String password) {
 
@@ -38,11 +42,8 @@ public class ChatService {
             return false;
         }
 
-        if(USER_LIST.contains(user)){
-            return false;
-        }
-
-        if (user.getPassword().equalsIgnoreCase(password)) {
+        if (!isAlreadyEntered(user) &&
+                user.getPassword().equalsIgnoreCase(password)) {
             USER_LIST.add(user);
             return true;
         }
@@ -51,23 +52,20 @@ public class ChatService {
     }
 
     public void exitChat(final String username) {
+
         final User user = USER_STORAGE.getByName(username);
         USER_LIST.remove(user);
     }
 
     /**
-     *   Find user in current user list
-     * @return    true - such user exists in user list, false - user not exists in storage or in user list
+     * Find user in current user list
+     * @return true - such user exists in user list, false - user not exists in storage or in user list
      */
-    public boolean isUserExists(final String username) {
-        final User user = USER_STORAGE.getByName(username);
-        if (user == null) {
-            return false;
-        }
-        return USER_LIST.contains(user);
+    public boolean isAlreadyEntered(final User user) {
+        return user != null && USER_LIST.contains(user);
     }
 
-    public User findUser(final String username){
+    public User findUser(final String username) {
         return USER_STORAGE.getByName(username);
     }
 

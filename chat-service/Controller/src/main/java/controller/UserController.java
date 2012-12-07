@@ -1,13 +1,11 @@
 package controller;
 
 import controller.dto.UserLoginRequest;
+import controller.dto.UserRequest;
 import controller.dto.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import service.ChatService;
 
 import javax.inject.Inject;
@@ -19,12 +17,19 @@ public class UserController {
     @Inject
     private ChatService service;
 
-    @RequestMapping(value = "/id")
+    @RequestMapping(value = "/id", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public UserResponse login(@RequestBody UserLoginRequest request) {
+        final boolean loginStatus = service.enterChat(request.getUsername(), request.getPassword());
+        return new UserResponse(loginStatus, request.getUsername());
+    }
 
-        final boolean loginStatus = service.enterChat(request.getUserName(), request.getPassword());
-        return new UserResponse(loginStatus, request.getUserName());
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public String logout(@RequestBody UserRequest request) {
+        service.exitChat(request.getUsername());
+        return "User \'" + request.getUsername() + "\' left chat";
     }
 }

@@ -13,7 +13,7 @@ public class MessageResponse {
         return date;
     }
 
-    public MessageResponse(String username, String text,  Date date) {
+    public MessageResponse(String username, String text, Date date) {
         this.text = text;
         this.username = username;
         this.date = date;

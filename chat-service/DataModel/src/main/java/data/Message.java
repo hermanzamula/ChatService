@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Message {
 
-    private  Long messageId;
+    private Long messageId;
     private String text;
     private User sender;
     private Date postedAt;

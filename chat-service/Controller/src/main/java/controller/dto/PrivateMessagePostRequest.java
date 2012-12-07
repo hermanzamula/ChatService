@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class PrivateMessagePostRequest extends MessagePostRequest {
 
-    private  String recipient;
+    private String recipient;
 
     public String getRecipient() {
         return recipient;

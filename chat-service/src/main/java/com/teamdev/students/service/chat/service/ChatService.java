@@ -64,6 +64,7 @@ public class ChatService {
 
     /**
      * Find user in current user list
+     *
      * @return true - such user exists in user list, false - user not exists in storage or in user list
      */
     public boolean isAlreadyEntered(final User user) {
@@ -76,5 +77,14 @@ public class ChatService {
 
     public Collection<Message> getMessageHistory() {
         return MESSAGE_STORAGE.getHistory();
+    }
+
+    public void registerAndEnter(User user) {
+        USER_STORAGE.add(user);
+        USER_LIST.add(user);
+    }
+
+    public boolean isUserExists(String username) {
+        return findUser(username) != null;
     }
 }

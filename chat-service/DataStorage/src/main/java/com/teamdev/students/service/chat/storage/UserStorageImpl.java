@@ -11,16 +11,22 @@ public class UserStorageImpl implements UserStorage {
 
 
     private final Map<Long, User> users = new HashMap<Long, User>();
+    private  long userIdIncrement = 0 ;
 
     public UserStorageImpl() {
-        users.put(1L, new User(1L, "Gogol", "Nikolai"));
-        users.put(2L, new User(2L, "Tolstoy", "Lev"));
-        users.put(3L, new User(3L, "Lermontov", "Yuri"));
-        users.put(4L, new User(4L, "Pushkin", "Alexandr"));
+        userIdIncrement++;
+        users.put(userIdIncrement, new User(userIdIncrement, "Gogol", "Nikolai"));
+        userIdIncrement++;
+        users.put(userIdIncrement, new User(userIdIncrement, "Tolstoy", "Lev"));
+        userIdIncrement++;
+        users.put(userIdIncrement, new User(userIdIncrement, "Lermontov", "Yuri"));
+        userIdIncrement++;
+        users.put(userIdIncrement, new User(userIdIncrement, "Pushkin", "Alexandr"));
     }
 
     @Override
     public void add(User user) {
+        user.setId(++userIdIncrement);
         users.put(user.getId(), user);
     }
 

@@ -1,4 +1,4 @@
-package com.teamdev.students.service.chat.controller.util;
+package com.teamdev.students.service.chat.util;
 
 public class UniqueIdCreator {
     private static Long increment = 0L;

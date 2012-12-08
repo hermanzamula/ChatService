@@ -1,4 +1,4 @@
-package com.teamdev.students.service.chat.controller;
+package com.teamdev.students.service.chat.util;
 
 
 public class ChatServiceException extends Exception {

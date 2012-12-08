@@ -10,6 +10,10 @@ public class User {
         return password;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public User(Long Id, String name, String password) {
         this.id = Id;
         this.name = name;

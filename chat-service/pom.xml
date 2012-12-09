@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.teamdev.students.service.chat</groupId>
     <artifactId>chat-service</artifactId>
-    <packaging>pom</packaging>
+    <packaging>war</packaging>
     <version>1.0</version>
 
     <name>chat-service Maven Webapp</name>
@@ -13,11 +13,6 @@
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>
     </properties>
-
-   <modules>
-        <module>DataModel</module>
-        <module>DataStorage</module>
-    </modules>
 
     <dependencies>
         <dependency>
@@ -86,14 +81,24 @@
                 <configuration>
                     <webResources>
                         <resource>
-                            <directory>src/main/*,
-                            Controller/src/main/java/*,
-                            DataModel/src/main/java/*,
-                            DataStorage/src/main/java/*
-                            </directory>
+                            <directory>src/main/*</directory>
+                            <directory>DataModel/src/main/java/*</directory>
+                            <directory>DataStorage/src/main/java/* </directory>
                         </resource>
                     </webResources>
+                    <overlays>
+                        <overlay/>
+                        <overlay>
+                            <groupId>com.teamdev.students.service.chat</groupId>
+                            <artifactId>DataModel</artifactId>
+                        </overlay>
+                        <overlay>
+                            <groupId>com.teamdev.students.service.chat</groupId>
+                            <artifactId>DataStorage</artifactId>
+                        </overlay>
+                    </overlays>
                 </configuration>
+
             </plugin>
         </plugins>
         <finalName>chat-service</finalName>

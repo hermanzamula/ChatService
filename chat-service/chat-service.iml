@@ -8,7 +8,7 @@
         </descriptors>
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
-          <root url="file://$MODULE_DIR$/src/main/*,&#10;                            Controller/src/main/java/*,&#10;                            DataModel/src/main/java/*,&#10;                            DataStorage/src/main/java/*" relative="/" />
+          <root url="file://$MODULE_DIR$/src/main/*" relative="/" />
         </webroots>
       </configuration>
     </facet>
@@ -25,6 +25,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="DataModel" />
     <orderEntry type="module" module-name="DataStorage" />
+    <orderEntry type="library" name="Maven: com.teamdev.students.service.chat:DataModel:1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.teamdev.students.service.chat:DataStorage:1.0" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet:servlet-api:2.5" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.7.1" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.7.1" level="project" />

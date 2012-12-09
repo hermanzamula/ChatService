@@ -65,11 +65,11 @@ public class ControllerUtil {
         return new User(createUniqueIndex(), request.getUsername(), request.getPassword());
     }
 
-    public static UserRegistrationResponse toResponse(boolean userExists, String username) {
+    public static UserRegistrationResponse toResponse(boolean userNotExists, String username) {
         String message = "Registration passed successfully";
-        if (userExists) {
+        if (!userNotExists) {
             message = "Registration failed";
         }
-        return new UserRegistrationResponse(userExists, username, message);
+        return new UserRegistrationResponse(userNotExists, username, message);
     }
 }

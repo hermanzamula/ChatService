@@ -12,8 +12,8 @@ $(function () {
                 url:"/chat/user/login/",
                 contentType:"application/json; charset=utf-8",
                 data:messageString,
-                success:function () {
-                    console.log("Login has been successfully passed");
+                success:function (data) {
+                    console.log("Login has been successfully passed: " + JSON.stringify(data));
                 }
             }
         );
@@ -44,9 +44,9 @@ $(function () {
             url:"./chat/messages/",
             contentType:"application/json; charset=utf-8",
             data:messageString,
-            success:function (data) {
+            success:function () {
                 console.log("Message processed successfully");
-                console.log("Object has been send: " + JSON.stringify(data));
+                console.log("Object has been send: ");
             }});
     });
 

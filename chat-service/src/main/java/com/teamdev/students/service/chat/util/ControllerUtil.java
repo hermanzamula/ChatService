@@ -4,12 +4,13 @@ package com.teamdev.students.service.chat.util;
 import com.teamdev.students.service.chat.controller.dto.request.MessagePostRequest;
 import com.teamdev.students.service.chat.controller.dto.request.PrivateMessagePostRequest;
 import com.teamdev.students.service.chat.controller.dto.request.UserRegistrationRequest;
-import com.teamdev.students.service.chat.controller.dto.response.MessageResponse;
-import com.teamdev.students.service.chat.controller.dto.response.UserRegistrationResponse;
+import com.teamdev.students.service.chat.controller.dto.response.*;
 import com.teamdev.students.service.chat.data.Message;
 import com.teamdev.students.service.chat.data.PrivateMessage;
 import com.teamdev.students.service.chat.data.User;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import static com.teamdev.students.service.chat.util.UniqueIdCreator.createUniqueIndex;
@@ -17,48 +18,38 @@ import static com.teamdev.students.service.chat.util.UniqueIdCreator.createUniqu
 
 public class ControllerUtil {
 
-    public static MessageResponse toResponse(Message message) throws ChatServiceException {
+    public static MessageResponse toResponse(final Message message) throws ChatServiceException {
         if (message == null) {
             throw new ChatServiceException("Message not found");
         }
-        return new MessageResponse(message.getSender().getName(), message.getText(), message.getPostedAt());
+        return new MessageResponse(message.getSender(), message.getText(), message.getPostedAt());
     }
 
-    public static MessageResponse[] toResponseArray(Message[] messages) {
-        MessageResponse[] responses = new MessageResponse[messages.length];
-        String sender;
-        String text;
-        Date date;
-
-        for (int i = 0; i < responses.length; i++) {
-            sender = messages[i].getSender().getName();
-            text = messages[i].getText();
-            date = messages[i].getPostedAt();
-            responses[i] = new MessageResponse(sender, text, date);
+    public static MessageResponseList toResponseArray(Collection<Message> messages) {
+        final Collection<MessageResponse> responses = new ArrayList<MessageResponse>();
+        for (Message m : messages) {
+            final MessageResponse response = new MessageResponse(m.getSender(), m.getText(), m.getPostedAt());
+            responses.add(response);
         }
-        return responses;
+        return new MessageResponseList(responses, responses.isEmpty());
     }
 
-    public static Message fromRequest(MessagePostRequest request, User user)
+    public static Message fromRequest(final MessagePostRequest request, boolean found)
             throws ChatServiceException {
-        if (user == null) {
+        if (!found) {
             throw new ChatServiceException("User \'" + request.getUsername() + "\' not found");
         }
-        return new Message(createUniqueIndex(), request.getText(), user, new Date());
+        return new Message(createUniqueIndex(), request.getText(), request.getUsername(), new Date());
     }
 
-    public static Message fromPrivateRequest(PrivateMessagePostRequest request, User sender,
-                                             User recipient) throws ChatServiceException {
-
-        if (sender == null) {
-            throw new ChatServiceException("User (sender) '" + request.getUsername() + "' not found");
-        }
-
-        if (recipient == null) {
+    public static PrivateMessage fromPrivateRequest(final PrivateMessagePostRequest request, boolean isRecipientFound)
+            throws ChatServiceException {
+        if (!isRecipientFound) {
             throw new ChatServiceException("User (recipient) '" + request.getRecipient() +
                     "' not found. Sender: " + request.getUsername() + "\'");
         }
-        return new PrivateMessage(createUniqueIndex(), request.getText(), sender, recipient, new Date());
+        return new PrivateMessage(createUniqueIndex(), request.getText(),
+                request.getUsername(), request.getRecipient(), new Date());
     }
 
     public static User fromRequest(UserRegistrationRequest request) {
@@ -71,5 +62,16 @@ public class ControllerUtil {
             message = "Registration failed";
         }
         return new UserRegistrationResponse(userNotExists, username, message);
+    }
+
+
+    public static PrivateMessageResponseList toResponse(final Collection<PrivateMessage> privateMessages) {
+        final Collection<PrivateMessageResponse> responses = new ArrayList<PrivateMessageResponse>();
+        for (PrivateMessage m : privateMessages) {
+            final PrivateMessageResponse response = new PrivateMessageResponse(m.getRecipient(),
+                    m.getText(), m.getPostedAt(), m.getSender());
+            responses.add(response);
+        }
+        return new PrivateMessageResponseList(privateMessages.isEmpty(), responses);
     }
 }

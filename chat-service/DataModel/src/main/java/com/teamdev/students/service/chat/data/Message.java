@@ -6,7 +6,7 @@ public class Message {
 
     private Long messageId;
     private String text;
-    private User sender;
+    private String sender;
     private Date postedAt;
 
     @Override
@@ -19,7 +19,7 @@ public class Message {
                 '}';
     }
 
-    public Message(Long messageId, String text, User sender, Date postedAt) {
+    public Message(Long messageId, String text, String sender, Date postedAt) {
         this.messageId = messageId;
         this.text = text;
         this.sender = sender;
@@ -34,7 +34,7 @@ public class Message {
         return text;
     }
 
-    public User getSender() {
+    public String getSender() {
         return sender;
     }
 

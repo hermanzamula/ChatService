@@ -69,4 +69,51 @@ $(function () {
             }
         );
     });
+
+    $("#getMessagesBtn").click(function () {
+
+        $.ajax({
+            type:"POST",
+            url:"./chat/messages/all/",
+            contentType:"application/json; charset=utf-8",
+
+            success:function (data) {
+                console.log("Message processed successfully");
+                console.log("Object received: " + JSON.stringify(data));
+            }});
+    });
+
+    $("#postPrivateBtn").click(function () {
+
+        var text = $("#postPrivate").val();
+        console.log("Posting message: " + text);
+        var message = { username:"Pushkin", text:text, recipient: "Lermontov"};
+        var messageString = JSON.stringify(message);
+        $.ajax({
+            type:"POST",
+            url:"./chat/messages/private/",
+            contentType:"application/json; charset=utf-8",
+            data:messageString,
+            success:function (data) {
+                console.log("Message processed successfully");
+                console.log("Object has been send" + JSON.stringify(data));
+            }});
+    });
+
+    $("#getPrivateBtn").click(function () {
+
+        var  name = $("#getPrivateId").val();
+        var request = {username:  name};
+        var message = JSON.stringify(request);
+        $.ajax({
+            type:"POST",
+            url:"./chat/messages/private/get/",
+            contentType:"application/json; charset=utf-8",
+            data: message,
+            success:function (data) {
+                console.log("Message processed successfully");
+                console.log("Object received: " + JSON.stringify(data));
+            }});
+    });
+
 });

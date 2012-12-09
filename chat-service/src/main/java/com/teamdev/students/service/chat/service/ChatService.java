@@ -1,30 +1,28 @@
 package com.teamdev.students.service.chat.service;
 
 import com.teamdev.students.service.chat.data.Message;
+import com.teamdev.students.service.chat.data.PrivateMessage;
 import com.teamdev.students.service.chat.data.User;
-import com.teamdev.students.service.chat.storage.MessageStorage;
-import com.teamdev.students.service.chat.storage.MessageStorageImpl;
-import com.teamdev.students.service.chat.storage.UserStorage;
-import com.teamdev.students.service.chat.storage.UserStorageImpl;
+import com.teamdev.students.service.chat.storage.*;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+
+import static com.teamdev.students.service.chat.storage.ChatStorageFactory.*;
+import static com.teamdev.students.service.chat.storage.StorageType.*;
 
 @Service
 public class ChatService {
 
     private static final Logger LOGGER = Logger.getLogger(ChatService.class);
 
-    private static final MessageStorage MESSAGE_STORAGE = new MessageStorageImpl();
+    private static final MessageStorage MESSAGE_STORAGE = createMessageStorage(FROM_MAP);
+    private static final UserStorage USER_STORAGE = createUserStorage(FROM_MAP); //Store user data
 
-    //Store user data
-    private static final UserStorage USER_STORAGE = new UserStorageImpl();
-
-    //List of users that enter to chat
-    private static final List<User> USER_LIST = new ArrayList<User>();
+    /**List of users that enter to chat.
+     * Contains last posted private messages (after last request on private messages)  */
+    private static final Map<User, List<PrivateMessage>> USER_LIST = new HashMap<User, List<PrivateMessage>>();
 
     public Message findMessage(final Long idMessage) {
         LOGGER.debug("Get message for id " + idMessage);
@@ -34,6 +32,17 @@ public class ChatService {
     public synchronized void postMessage(final Message message) {
         LOGGER.debug("post message: \'" + message);
         MESSAGE_STORAGE.add(message);
+    }
+
+    public synchronized boolean postPrivate(final PrivateMessage message) {
+        LOGGER.debug("post private message: '" + message);
+        if (isAlreadyEntered(message.getRecipient())) {
+            final User user = findUser(message.getRecipient());
+            USER_LIST.get(user).add(message);
+			MESSAGE_STORAGE.addPrivate(message);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -49,7 +58,7 @@ public class ChatService {
 
         if (!isAlreadyEntered(user) &&
                 user.getPassword().equalsIgnoreCase(password)) {
-            USER_LIST.add(user);
+            USER_LIST.put(user, new ArrayList<PrivateMessage>());
             return true;
         }
 
@@ -67,8 +76,12 @@ public class ChatService {
      *
      * @return true - such user exists in user list, false - user not exists in storage or in user list
      */
-    public boolean isAlreadyEntered(final User user) {
-        return user != null && USER_LIST.contains(user);
+    private boolean isAlreadyEntered(final User user) {
+        return user != null && USER_LIST.containsKey(user);
+    }
+
+    public boolean isAlreadyEntered(final String username) {
+        return isAlreadyEntered(findUser(username));
     }
 
     public User findUser(final String username) {
@@ -81,10 +94,18 @@ public class ChatService {
 
     public void registerAndEnter(User user) {
         USER_STORAGE.add(user);
-        USER_LIST.add(user);
+        USER_LIST.put(user, new ArrayList<PrivateMessage>());
     }
 
     public boolean isUserExists(String username) {
         return findUser(username) != null;
+    }
+
+    public Collection<PrivateMessage> getPrivates(String username) {
+
+        final List<PrivateMessage> messageList = USER_LIST.get(findUser(username));
+        final List<PrivateMessage> privateMessages = new ArrayList<PrivateMessage>(messageList);
+        messageList.clear();
+        return privateMessages;
     }
 }

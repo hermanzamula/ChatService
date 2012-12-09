@@ -4,14 +4,21 @@ import java.util.Date;
 
 public class PrivateMessage extends Message {
 
-    private User recipient;
+    private String recipient;
 
-    public PrivateMessage(Long messageId, String text, User sender, User recipient, Date postedAt) {
+    public PrivateMessage(Long messageId, String text, String sender, String recipient, Date postedAt) {
         super(messageId, text, sender, postedAt);
         this.recipient = recipient;
     }
 
-    public User getRecipient() {
+    @Override
+    public String toString() {
+        return "PrivateMessage{" +
+                "recipient='" + recipient + '\'' +
+                '}';
+    }
+
+    public String getRecipient() {
         return recipient;
     }
 }

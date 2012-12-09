@@ -4,26 +4,34 @@ package com.teamdev.students.service.chat.controller.dto.response;
 public class UserResponse {
 
     boolean isOk;
-    String userName;
+    String username;
 
-    public UserResponse(boolean ok, String userName) {
+    public UserResponse(boolean ok, String username) {
         isOk = ok;
-        this.userName = userName;
+        this.username = username;
     }
 
     public boolean isOk() {
         return isOk;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public void setIsOk(boolean isOk) {
        this.isOk = isOk;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    @Override
+    public String toString() {
+        return "UserResponse{" +
+                "isOk=" + isOk +
+                ", username='" + username + '\'' +
+                '}';
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

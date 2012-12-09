@@ -1,22 +1,26 @@
 package com.teamdev.students.service.chat.controller.dto.response;
 
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MessageResponse {
 
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss");
     private String text;
     private String username;
-    private Date date;
+    private String date;
 
-    public Date getDate() {
-        return date;
-    }
+
 
     public MessageResponse(String username, String text, Date date) {
         this.text = text;
         this.username = username;
-        this.date = date;
+        this.date = DATE_FORMAT.format(date);
+    }
+
+    public String getDate() {
+        return date;
     }
 
     public String getText() {
@@ -36,7 +40,7 @@ public class MessageResponse {
     }
 
     public void setDate(Date date) {
-        this.date = date;
+        this.date = DATE_FORMAT.format(date);
     }
 
     @Override
@@ -44,7 +48,7 @@ public class MessageResponse {
         return "MessageResponse{" +
                 "text='" + text + '\'' +
                 ", username='" + username + '\'' +
-                ", date=" + date +
+                ", date='" + date + '\'' +
                 '}';
     }
 }

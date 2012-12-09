@@ -1,6 +1,7 @@
 package com.teamdev.students.service.chat.storage;
 
 import com.teamdev.students.service.chat.data.Message;
+import com.teamdev.students.service.chat.data.PrivateMessage;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,5 +27,15 @@ public class MessageStorageImpl implements MessageStorage {
     @Override
     public Message get(Long messageId) {
         return messageMap.get(messageId);
+    }
+
+    @Override
+    public PrivateMessage getPrivate(Long messageId) {
+        return (PrivateMessage) get(messageId);
+    }
+
+    @Override
+    public void addPrivate(PrivateMessage message) {
+        add(message);
     }
 }

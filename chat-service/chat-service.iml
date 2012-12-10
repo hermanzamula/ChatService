@@ -41,7 +41,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-context-support:3.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.9" level="project" />
-    <orderEntry type="library" name="jquery-1.8.3" level="application" />
   </component>
 </module>
 

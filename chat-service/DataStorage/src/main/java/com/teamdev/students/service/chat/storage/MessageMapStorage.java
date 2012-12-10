@@ -7,12 +7,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MessageStorageImpl implements MessageStorage {
+public class MessageMapStorage implements MessageStorage {
 
     /**
      * First param - Message id, second -  message itself
      */
     private Map<Long, Message> messageMap = new HashMap<Long, Message>();
+	private Map<Long, PrivateMessage> privateMessageMap = new HashMap<Long, PrivateMessage>();
 
     @Override
     public Collection<Message> getHistory() {
@@ -31,11 +32,11 @@ public class MessageStorageImpl implements MessageStorage {
 
     @Override
     public PrivateMessage getPrivate(Long messageId) {
-        return (PrivateMessage) get(messageId);
+        return privateMessageMap.get(messageId);
     }
 
     @Override
     public void addPrivate(PrivateMessage message) {
-        add(message);
+        privateMessageMap.put(message.getMessageId(), message);
     }
 }

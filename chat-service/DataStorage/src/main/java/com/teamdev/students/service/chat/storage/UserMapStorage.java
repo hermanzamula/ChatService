@@ -7,13 +7,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserStorageImpl implements UserStorage {
+public class UserMapStorage implements UserStorage {
 
 
     private final Map<Long, User> users = new HashMap<Long, User>();
     private  long userIdIncrement = 0 ;
 
-    public UserStorageImpl() {
+    public UserMapStorage() {
         userIdIncrement++;
         users.put(userIdIncrement, new User(userIdIncrement, "Gogol", "Nikolai"));
         userIdIncrement++;

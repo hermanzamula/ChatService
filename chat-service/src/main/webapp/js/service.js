@@ -1,71 +1,116 @@
 var ChatService = function (chatURL) {
-   this.serviceURL = chatURL;
-   this. _content_type =  "application/json; charset=utf-8";
+    this.serviceURL = chatURL;
+    this._content_type = "json";
 };
 
 ChatService.prototype.onSendPublicMessage = function (messageData) {
     var instance = this;
     $.post(instance.serviceURL + "/messages/", messageData, function () {
-            console.log("message has been sent");
-        }, instance._content_type );
+        console.log("message has been sent");
+    }, instance._content_type);
 };
 
 ChatService.prototype.onSendPrivateMessage = function (privateMessageData) {
     var instance = this;
-    $.post(instance.serviceURL + "/messages/private/",  privateMessageData,
-        function (data) {
-            console.log("private message has been sent");
-            var response = JSON.parse(data);
-            instance.onSendPrivateMessageResponse(response);
-        }, instance._content_type);
+    $.post(instance.serviceURL + "/messages/private/", privateMessageData,
+            function (data) {
+                console.log("private message has been sent");
+                var response = JSON.parse(data);
+                instance.triggerSendPrivateMessageResponse(response);
+            }, instance._content_type);
 };
 
 ChatService.prototype.onLogin = function (userData) {
     var instance = this;
-    $.post(instance.serviceURL+ "/user/login/", userData, function(data){
-        var response = JSON.parse(data);
-        console.log("User "+ response.username + " enter.");
-        instance.onLoginResponse(response);
-    }, instance._content_type);
+    var postMessage = JSON.stringify(userData);
+    console.log(" try login: " + postMessage);
+    $.ajax({type:"POST",
+        url:instance.serviceURL + "/user/login/",
+        data:postMessage,
+        success:function (data) {
+            var response = JSON.parse(JSON.stringify(data));
+            console.log("User " + response.username + " enter." + response.ok + JSON.stringify(data));
+            instance.triggerLoginResponse(response);
+        }, dataType:'json',
+        contentType:'application/json; charset=utf-8'});
 };
 
 ChatService.prototype.onRegistration = function (userData) {
     var instance = this;
-    $.post(instance.serviceURL+ "/user/registration/", userData, function(data){
-        var response = JSON.parse(data);
-        console.log("User "+ response.username + " has been registered and enter.");
-        instance.onRegistrationResponse(response);
-    }, instance._content_type);
+    $.ajax({type:"POST",
+        url:instance.serviceURL + "/user/registration/",
+        data:userData,
+        success:function (data) {
+            var response = JSON.parse(data);
+            console.log("User " + response.username + " has been registered and enter.");
+            instance.triggerRegistrationResponse(response);
+        }, dataType:'json',
+        contentType:'application/json; charset=utf-8'});
 };
 
-ChatService.prototype.onSignIn = function () {
+ChatService.prototype.onSignUp = function () {
     location.href = "/registration.html";
 };
 
-ChatService.prototype.onLogout = function(userData){
+ChatService.prototype.onLogout = function (userData) {
     var instance = this;
-    $.post(instance.serviceURL+ "/user/logout/", userData, function(data){
+    $.post(instance.serviceURL + "/user/logout/", userData, function (data) {
         var response = JSON.parse(data);
         console.log(JSON.stringify(data) + ": logout");
         instance.onLogout(response);
     }, instance._content_type);
 };
 
-ChatService.prototype.onRegistrationResponse = function (registrationResponseData) {
+ChatService.prototype.onGetUserListRequest = function () {
+    var instance = this;
+    $.post(instance.serviceURL + "/user/list/", function (data) {
+        var response = JSON.parse(data);
+        console.log(JSON.stringify(data) + ": get user list");
+        instance.triggerUserListResponse(response);
+    }, instance._content_type);
+};
+
+ChatService.prototype.onGetChangesRequest = function (username) {
+    var instance = this;
+    $.post(instance.serviceURL + "/user/changes/", username, function (data) {
+        var response = JSON.parse(data);
+        console.log(JSON.stringify(data) + ": getChangesList");
+        instance.triggerGetChangesResponse(response);
+    }, instance._content_type);
+};
+
+ChatService.prototype.onGetPublicMessage = function (messageId) {
+    var instance = this;
+    $.post(instance.serviceURL + "/messages/" + messageId, messageId, function (data) {
+        var jsonMessage = JSON.parse(data);
+        console.log(JSON.stringify(data) + ": receive message");
+        instance.triggerGetPublicMessageResponse(messageId);
+    })
+}
+
+ChatService.prototype.triggerRegistrationResponse = function (registrationResponseData) {
     $(document).trigger(Events.REGISTRATION_RESPONSE, [registrationResponseData]);
 };
 
-ChatService.prototype.onLoginResponse = function (userResponse) {
+ChatService.prototype.triggerLoginResponse = function (userResponse) {
     $(document).trigger(Events.LOGIN_RESPONSE, [userResponse]);
 };
 
-ChatService.prototype.onSendPrivateMessageResponse = function (response) {
+ChatService.prototype.triggerSendPrivateMessageResponse = function (response) {
     $(document).trigger(Events.PRIVATE_MESSAGE_RESPONSE, [response]);
 };
 
-ChatService.prototype.onSendPublicMessageResponse = function (publicMessageResponse) {
+ChatService.prototype.triggerGetPublicMessageResponse = function (publicMessageResponse) {
     $(document).trigger(Events.PUBLIC_MESSAGE_RESPONSE, [publicMessageResponse]);
-}
+};
+
+ChatService.prototype.triggerUserListResponse = function (userlistResponse) {
+    $(document).trigger(Events.GET_USER_LIST_RESPONSE, [userlistResponse]);
+};
+
+ChatService.prototype.triggerGetChangesResponse = function (changesData) {
+    $(document).trigger(Events.GET_USER_LIST_RESPONSE, [changesData]);
+};
 
 
 $(function () {
@@ -78,15 +123,15 @@ $(function () {
         var messageString = JSON.stringify(message);
 
         $.ajax({
-                type:"POST",
-                url:"/chat/user/login/",
-                contentType:"application/json; charset=utf-8",
-                data:messageString,
-                success:function (data) {
-                    console.log("Login has been successfully passed: " + JSON.stringify(data));
-                    location.href = "chat.html";
+                    type:"POST",
+                    url:"/chat/user/login/",
+                    contentType:"application/json; charset=utf-8",
+                    data:messageString,
+                    success:function (data) {
+                        console.log("Login has been successfully passed: " + JSON.stringify(data));
+                        location.href = "chat.html";
+                    }
                 }
-            }
         );
     });
 
@@ -129,15 +174,15 @@ $(function () {
         var messageString = JSON.stringify(message);
 
         $.ajax({
-                type:"POST",
-                url:"/chat/user/registration/",
-                contentType:"application/json; charset=utf-8",
-                data:messageString,
-                success:function (data) {
-                    console.log("Login has been successfully passed");
-                    console.log("Response object: " + JSON.stringify(data));
+                    type:"POST",
+                    url:"/chat/user/registration/",
+                    contentType:"application/json; charset=utf-8",
+                    data:messageString,
+                    success:function (data) {
+                        console.log("Login has been successfully passed");
+                        console.log("Response object: " + JSON.stringify(data));
+                    }
                 }
-            }
         );
     });
 

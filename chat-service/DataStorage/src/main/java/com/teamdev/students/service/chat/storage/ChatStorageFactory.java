@@ -7,11 +7,11 @@ import java.util.Map;
 public class ChatStorageFactory {
 
     public static final Map<StorageType, MessageStorage> MESSAGE_STORAGE_MAP = new HashMap<StorageType, MessageStorage>() {{
-        put(StorageType.FROM_MAP, new MessageStorageImpl());
+        put(StorageType.FROM_MAP, new MessageMapStorage());
     }};
 
     public static final Map<StorageType, UserStorage> USER_STORAGE_MAP = new HashMap<StorageType, UserStorage>() {{
-        put(StorageType.FROM_MAP, new UserStorageImpl());
+        put(StorageType.FROM_MAP, new UserMapStorage());
     }};
 
     public static MessageStorage createMessageStorage(StorageType type) {

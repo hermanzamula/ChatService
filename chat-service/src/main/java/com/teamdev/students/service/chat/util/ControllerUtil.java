@@ -78,7 +78,7 @@ public class ControllerUtil {
     }
 
 
-    public static UserListResponse toResponse(Collection<User> userList) {
+    public static UserListResponse toUserListResponse(Collection<User> userList) {
         final Collection<UserData> users = new ArrayList<UserData>();
         for (User user : userList){
             users.add(new UserData(user.getName(), user.getId()));

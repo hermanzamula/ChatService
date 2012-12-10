@@ -9,6 +9,7 @@ import com.teamdev.students.service.chat.controller.dto.response.UserRegistratio
 import com.teamdev.students.service.chat.controller.dto.response.UserResponse;
 import com.teamdev.students.service.chat.data.User;
 import com.teamdev.students.service.chat.service.ChatService;
+import com.teamdev.students.service.chat.util.ControllerUtil;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -58,11 +59,11 @@ public class UserController {
         return toResponse(userNotExists, request.getUsername());
     }
 
-    @RequestMapping(value = "/userlist", method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public UserListResponse getUserList() {
-        return toResponse(service.getUserList());
+        return ControllerUtil.toUserListResponse(service.getUserList());
     }
 
     @RequestMapping(value = "/changes", method = RequestMethod.POST)

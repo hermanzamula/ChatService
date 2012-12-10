@@ -6,11 +6,11 @@ import java.util.List;
 public class ChangesResponse {
 
     private boolean noChanges;
-    private List<String> changesMessage;
+    private List<String> changeMessages;
 
-    public ChangesResponse(boolean changed, List<String> changesMessage) {
+    public ChangesResponse(boolean changed, List<String> changeMessages) {
         noChanges = changed;
-        this.changesMessage = changesMessage;
+        this.changeMessages = changeMessages;
     }
 
     public boolean isNoChanges() {
@@ -22,11 +22,11 @@ public class ChangesResponse {
         this.noChanges = noChanges;
     }
 
-    public List<String> getChangesMessage() {
-        return changesMessage;
+    public List<String> getChangeMessages() {
+        return changeMessages;
     }
 
-    public void setChangesMessage(List<String> changesMessage) {
-        this.changesMessage = changesMessage;
+    public void setChangeMessages(List<String> changeMessages) {
+        this.changeMessages = changeMessages;
     }
 }

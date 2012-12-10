@@ -1,6 +1,7 @@
 package com.teamdev.students.service.chat.util;
 
 
+import com.teamdev.students.service.chat.controller.dto.UserData;
 import com.teamdev.students.service.chat.controller.dto.request.MessagePostRequest;
 import com.teamdev.students.service.chat.controller.dto.request.PrivateMessagePostRequest;
 import com.teamdev.students.service.chat.controller.dto.request.UserRegistrationRequest;
@@ -12,6 +13,7 @@ import com.teamdev.students.service.chat.data.User;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import static com.teamdev.students.service.chat.util.UniqueIdCreator.createUniqueIndex;
 
@@ -73,5 +75,19 @@ public class ControllerUtil {
             responses.add(response);
         }
         return new PrivateMessageResponseList(privateMessages.isEmpty(), responses);
+    }
+
+
+    public static UserListResponse toResponse(Collection<User> userList) {
+        final Collection<UserData> users = new ArrayList<UserData>();
+        for (User user : userList){
+            users.add(new UserData(user.getName(), user.getId()));
+        }
+        return new UserListResponse(users);
+    }
+
+
+    public static ChangesResponse toResponse(List<String> changeList) {
+        return new ChangesResponse(changeList.isEmpty(), changeList);
     }
 }

@@ -6,15 +6,15 @@
 
 
     <artifactId>DataStorage</artifactId>
-    <groupId>com.teamdev.students.service.chat</groupId>
-    <version>1.0</version>
-    <name>DataStorage</name>
-
     <dependencies>
         <dependency>
-           <groupId>com.teamdev.students.service.chat</groupId>
+            <groupId>com.teamdev.students.service.chat</groupId>
             <artifactId>DataModel</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
+    <groupId>com.teamdev.students.service.chat</groupId>
+    <version>1.0</version>
+    <name>DataStorage</name>
+
 </project>

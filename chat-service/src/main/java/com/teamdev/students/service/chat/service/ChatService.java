@@ -3,14 +3,16 @@ package com.teamdev.students.service.chat.service;
 import com.teamdev.students.service.chat.data.Message;
 import com.teamdev.students.service.chat.data.PrivateMessage;
 import com.teamdev.students.service.chat.data.User;
-import com.teamdev.students.service.chat.storage.*;
+import com.teamdev.students.service.chat.storage.MessageStorage;
+import com.teamdev.students.service.chat.storage.UserStorage;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.teamdev.students.service.chat.storage.ChatStorageFactory.*;
-import static com.teamdev.students.service.chat.storage.StorageType.*;
+import static com.teamdev.students.service.chat.storage.ChatStorageFactory.createMessageStorage;
+import static com.teamdev.students.service.chat.storage.ChatStorageFactory.createUserStorage;
+import static com.teamdev.students.service.chat.storage.StorageType.FROM_MAP;
 
 @Service
 public class ChatService {
@@ -66,7 +68,7 @@ public class ChatService {
                 user.getPassword().equalsIgnoreCase(password)) {
             USER_LIST.put(user, new ArrayList<PrivateMessage>());
             CHANGES_FOR_USER.put(user.getName(), new ArrayList<String>());
-            setChanges( username + ENTER_TO_CHAT_MESSAGE);
+            setChanges(username + ENTER_TO_CHAT_MESSAGE);
             return true;
         }
         return false;

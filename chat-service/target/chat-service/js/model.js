@@ -1,10 +1,15 @@
-var UserRegistrationData = function (login, pass) {
+var UserRegistrationData = function (login, pass, color) {
     this.username = login;
     this.password = pass;
+    this.color = color;
 };
 
+var UserData = function(login, color){
+    this. username = login;
+    this. color = color;
+}
 
-var UserRequest = function(username){
+var UserRequest = function (username) {
     this.username = username;
 };
 
@@ -18,6 +23,7 @@ var UserResponseData = function (jsonData) {
     var jsonLoginData = JSON.parse(JSON.stringify(jsonData));
     this.ok = jsonLoginData.ok;
     this.username = jsonLoginData.username;
+    //this.color = jsonLoginData.color;
 };
 
 var UserRegistrationResponseData = function (jsonData) {
@@ -57,9 +63,24 @@ var ChangesResponse = function (jsonData) {
 };
 
 var UserListResponse = function (jsonData) {
-    var jsonMessageData = JSON.parse (jsonData);
+    var jsonMessageData = JSON.parse(jsonData);
     this.users = jsonMessageData.users;
-}
+};
+
+var UserContext = function (userData) {
+    this.localStorage = localStorage;
+    this.localStorage.setItem('chatData', JSON.stringify(userData));
+};
+
+UserContext.prototype.getUsername = function () {
+    var userData = JSON.parse(this.localStorage.getItem('chatData'));
+    return userData.username;
+};
+
+UserContext.prototype.getUserColor = function () {
+    var userData = JSON.parse(this.localStorage.getItem('chatData'));
+    return userData.color;
+};
 
 var Events = {
     SEND_PUBLIC_MESSAGE:"send-public-message",
@@ -72,10 +93,12 @@ var Events = {
     PRIVATE_MESSAGE_RESPONSE:"private-message-response",
     REGISTRATION_RESPONSE:"registration-response",
     LOGIN_RESPONSE:"login-response",
-    GET_USER_LIST_RESPONSE: "get-user-list-response",
-    GET_SERVER_CHANGES_RESPONSE: "get-server-changes-response",
-    GET_SERVER_CHANGES_REQUEST: "get-server-changes-request",
-    GET_USER_LIST_REQUEST: "get-user-list-request"
+    GET_USER_LIST_RESPONSE:"get-user-list-response",
+    GET_SERVER_CHANGES_RESPONSE:"get-server-changes-response",
+    GET_SERVER_CHANGES_REQUEST:"get-server-changes-request",
+    GET_USER_LIST_REQUEST:"get-user-list-request",
+    LOGOUT_RESPONSE:"logout-response",
+    LOGIN_SUCCESS:"login-success"
 };
 
 var Constants = {

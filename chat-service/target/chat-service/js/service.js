@@ -1,51 +1,47 @@
 var ChatService = function (chatURL) {
     this.serviceURL = chatURL;
-    this._content_type = "json";
 };
 
 ChatService.prototype.onSendPublicMessage = function (messageData) {
     var instance = this;
-    $.post(instance.serviceURL + "/messages/", messageData, function () {
+    $.postJSON(instance,"/messages/", messageData, function () {
         console.log("message has been sent");
-    }, instance._content_type);
+    });
+};
+
+ChatService.prototype.postJSON = function (instance, uri, data, onsuccess) {
+    var postMessage = JSON.stringify(data);
+    $.ajax({type:"POST", url:instance.serviceURL + uri,
+        data:postMessage, success:onsuccess, dataType:'json',
+        contentType:'application/json; charset=utf-8'});
 };
 
 ChatService.prototype.onSendPrivateMessage = function (privateMessageData) {
     var instance = this;
-    $.post(instance.serviceURL + "/messages/private/", privateMessageData,
-            function (data) {
-                console.log("private message has been sent");
-                var response = JSON.parse(data);
-                instance.triggerSendPrivateMessageResponse(response);
-            }, instance._content_type);
+    this.postJSON(instance, "/messages/private/", privateMessageData, function (data) {
+        console.log("private message has been sent");
+        var response = JSON.parse(data);
+        instance.triggerSendPrivateMessageResponse(response);
+    });
 };
 
 ChatService.prototype.onLogin = function (userData) {
     var instance = this;
-    var postMessage = JSON.stringify(userData);
-    console.log(" try login: " + postMessage);
-    $.ajax({type:"POST",
-        url:instance.serviceURL + "/user/login/",
-        data:postMessage,
-        success:function (data) {
-            var response = JSON.parse(JSON.stringify(data));
-            console.log("User " + response.username + " enter." + response.ok + JSON.stringify(data));
-            instance.triggerLoginResponse(response);
-        }, dataType:'json',
-        contentType:'application/json; charset=utf-8'});
+    console.log(" try login: " + userData);
+    this.postJSON(instance, "/user/login/", userData, function (data) {
+        var response = JSON.parse(JSON.stringify(data));
+        console.log("User " + response.username + " enter." + response.ok + JSON.stringify(data));
+        instance.triggerLoginResponse(response);
+    });
 };
 
 ChatService.prototype.onRegistration = function (userData) {
     var instance = this;
-    $.ajax({type:"POST",
-        url:instance.serviceURL + "/user/registration/",
-        data:userData,
-        success:function (data) {
-            var response = JSON.parse(data);
-            console.log("User " + response.username + " has been registered and enter.");
-            instance.triggerRegistrationResponse(response);
-        }, dataType:'json',
-        contentType:'application/json; charset=utf-8'});
+    this.postJSON(instance, "/user/registration/", userData, function (data) {
+        var response = JSON.parse(JSON.stringify(data));
+        console.log("User " + response.username + " has been registered and enter.");
+        instance.triggerRegistrationResponse(response);
+    });
 };
 
 ChatService.prototype.onSignUp = function () {
@@ -54,42 +50,47 @@ ChatService.prototype.onSignUp = function () {
 
 ChatService.prototype.onLogout = function (userData) {
     var instance = this;
-    $.post(instance.serviceURL + "/user/logout/", userData, function (data) {
-        var response = JSON.parse(data);
+    this.postJSON(instance, "/user/logout/", userData, function (data) {
+        var response = JSON.parse(JSON.stringify(data));
         console.log(JSON.stringify(data) + ": logout");
-        instance.onLogout(response);
-    }, instance._content_type);
+        instance.triggerLogoutResponse(response);
+    });
 };
 
 ChatService.prototype.onGetUserListRequest = function () {
     var instance = this;
-    $.post(instance.serviceURL + "/user/list/", function (data) {
-        var response = JSON.parse(data);
+    //TODO: Attention
+    this.postJSON(instance, "/user/list/", function (data) {
+        var response = JSON.parse(JSON.stringify(data));
         console.log(JSON.stringify(data) + ": get user list");
         instance.triggerUserListResponse(response);
-    }, instance._content_type);
+    });
 };
 
 ChatService.prototype.onGetChangesRequest = function (username) {
     var instance = this;
-    $.post(instance.serviceURL + "/user/changes/", username, function (data) {
-        var response = JSON.parse(data);
+    this.postJSON(instance, "/user/changes/", username, function (data) {
+        var response = JSON.parse(JSON.stringify(data));
         console.log(JSON.stringify(data) + ": getChangesList");
         instance.triggerGetChangesResponse(response);
-    }, instance._content_type);
+    });
 };
 
 ChatService.prototype.onGetPublicMessage = function (messageId) {
     var instance = this;
-    $.post(instance.serviceURL + "/messages/" + messageId, messageId, function (data) {
-        var jsonMessage = JSON.parse(data);
+    this.postJSON(instance, "/messages/" + messageId, function (data) {
+        var jsonMessage = JSON.parse(JSON.stringify(data));
         console.log(JSON.stringify(data) + ": receive message");
         instance.triggerGetPublicMessageResponse(messageId);
     })
-}
+} ;
+ChatService.prototype.onLoginSuccess = function(){
+  location.href = "chat.html";
+};
 
 ChatService.prototype.triggerRegistrationResponse = function (registrationResponseData) {
     $(document).trigger(Events.REGISTRATION_RESPONSE, [registrationResponseData]);
+    console.log(JSON.stringify(registrationResponseData) + " has been triggered");
 };
 
 ChatService.prototype.triggerLoginResponse = function (userResponse) {
@@ -104,133 +105,97 @@ ChatService.prototype.triggerGetPublicMessageResponse = function (publicMessageR
     $(document).trigger(Events.PUBLIC_MESSAGE_RESPONSE, [publicMessageResponse]);
 };
 
-ChatService.prototype.triggerUserListResponse = function (userlistResponse) {
-    $(document).trigger(Events.GET_USER_LIST_RESPONSE, [userlistResponse]);
+ChatService.prototype.triggerUserListResponse = function (userListResponse) {
+    $(document).trigger(Events.GET_USER_LIST_RESPONSE, [userListResponse]);
 };
 
 ChatService.prototype.triggerGetChangesResponse = function (changesData) {
     $(document).trigger(Events.GET_USER_LIST_RESPONSE, [changesData]);
 };
 
+ChatService.prototype.triggerLogoutResponse = function (responseData) {
+    $(document).trigger(Events.LOGOUT_RESPONSE, [responseData]);
+};
 
-$(function () {
+/**
+ $("#getMessageBtn").click(function () {
+ var messageID = $("#getMessage").val();
 
-    $("#loginButton").click(function () {
-        console.log("Login request");
-        var username = $("#usernameFieldId").val();
-        var password = $("#passwordFieldId").val();
-        var message = {username:username, password:password};
-        var messageString = JSON.stringify(message);
+ $.ajax({
+ type:"POST",
+ url:"./chat/messages/" + messageID,
+ contentType:"application/json; charset=utf-8",
 
-        $.ajax({
-                    type:"POST",
-                    url:"/chat/user/login/",
-                    contentType:"application/json; charset=utf-8",
-                    data:messageString,
-                    success:function (data) {
-                        console.log("Login has been successfully passed: " + JSON.stringify(data));
-                        location.href = "chat.html";
-                    }
-                }
-        );
-    });
+ success:function (data) {
+ console.log("Message processed successfully");
+ console.log("Object received: " + JSON.stringify(data));
+ }});
+ });
 
-    $("#getMessageBtn").click(function () {
-        var messageID = $("#getMessage").val();
+ $("#postMessageBtn").click(function () {
 
-        $.ajax({
-            type:"POST",
-            url:"./chat/messages/" + messageID,
-            contentType:"application/json; charset=utf-8",
+ var text = $("#postMessageId").val();
+ console.log("Posting message: " + text);
+ var message = { username:"Pushkin", text:text};
+ var messageString = JSON.stringify(message);
+ $.ajax({
+ type:"POST",
+ url:"./chat/messages/",
+ contentType:"application/json; charset=utf-8",
+ data:messageString,
+ success:function () {
+ console.log("Message processed successfully");
+ console.log("Object has been send: ");
+ }});
+ });
 
-            success:function (data) {
-                console.log("Message processed successfully");
-                console.log("Object received: " + JSON.stringify(data));
-            }});
-    });
 
-    $("#postMessageBtn").click(function () {
+ $("#getMessagesBtn").click(function () {
 
-        var text = $("#postMessageId").val();
-        console.log("Posting message: " + text);
-        var message = { username:"Pushkin", text:text};
-        var messageString = JSON.stringify(message);
-        $.ajax({
-            type:"POST",
-            url:"./chat/messages/",
-            contentType:"application/json; charset=utf-8",
-            data:messageString,
-            success:function () {
-                console.log("Message processed successfully");
-                console.log("Object has been send: ");
-            }});
-    });
+ $.ajax({
+ type:"POST",
+ url:"./chat/messages/all/",
+ contentType:"application/json; charset=utf-8",
 
-    $("#regBtnId").click(function () {
-        console.log("Registration request");
-        var username = $("#regUsernameId").val();
-        var password = $("#regPasswordId").val();
-        var message = {username:username, password:password};
-        var messageString = JSON.stringify(message);
+ success:function (data) {
+ console.log("Message processed successfully");
+ console.log("Object received: " + JSON.stringify(data));
+ }});
+ });
 
-        $.ajax({
-                    type:"POST",
-                    url:"/chat/user/registration/",
-                    contentType:"application/json; charset=utf-8",
-                    data:messageString,
-                    success:function (data) {
-                        console.log("Login has been successfully passed");
-                        console.log("Response object: " + JSON.stringify(data));
-                    }
-                }
-        );
-    });
+ $("#postPrivateBtn").click(function () {
 
-    $("#getMessagesBtn").click(function () {
+ var text = $("#postPrivate").val();
+ console.log("Posting message: " + text);
+ var message = { username:"Pushkin", text:text, recipient:"Lermontov"};
+ var messageString = JSON.stringify(message);
+ $.ajax({
+ type:"POST",
+ url:"./chat/messages/private/",
+ contentType:"application/json; charset=utf-8",
+ data:messageString,
+ success:function (data) {
+ console.log("Message processed successfully");
+ console.log("Object has been send" + JSON.stringify(data));
+ }});
+ });
 
-        $.ajax({
-            type:"POST",
-            url:"./chat/messages/all/",
-            contentType:"application/json; charset=utf-8",
+ $("#getPrivateBtn").click(function () {
 
-            success:function (data) {
-                console.log("Message processed successfully");
-                console.log("Object received: " + JSON.stringify(data));
-            }});
-    });
+ var name = $("#getPrivateId").val();
+ var request = {username:name};
+ var message = JSON.stringify(request);
+ $.ajax({
+ type:"POST",
+ url:"./chat/messages/private/get/",
+ contentType:"application/json; charset=utf-8",
+ data:message,
+ success:function (data) {
+ console.log("Message processed successfully" + JSON.stringify(data));
+ var messages = new PrivateMessageResponseList(JSON.stringify(data));
+ console.log("Object received: " + messages.empty + " " + messages.messages[0].date);
+ }});
+ });
 
-    $("#postPrivateBtn").click(function () {
-
-        var text = $("#postPrivate").val();
-        console.log("Posting message: " + text);
-        var message = { username:"Pushkin", text:text, recipient:"Lermontov"};
-        var messageString = JSON.stringify(message);
-        $.ajax({
-            type:"POST",
-            url:"./chat/messages/private/",
-            contentType:"application/json; charset=utf-8",
-            data:messageString,
-            success:function (data) {
-                console.log("Message processed successfully");
-                console.log("Object has been send" + JSON.stringify(data));
-            }});
-    });
-
-    $("#getPrivateBtn").click(function () {
-
-        var name = $("#getPrivateId").val();
-        var request = {username:name};
-        var message = JSON.stringify(request);
-        $.ajax({
-            type:"POST",
-            url:"./chat/messages/private/get/",
-            contentType:"application/json; charset=utf-8",
-            data:message,
-            success:function (data) {
-                console.log("Message processed successfully" + JSON.stringify(data));
-                var messages = new PrivateMessageResponseList(JSON.stringify(data));
-                console.log("Object received: " + messages.empty + " " + messages.messages[0].date);
-            }});
-    });
-
-});
+ });
+ **/

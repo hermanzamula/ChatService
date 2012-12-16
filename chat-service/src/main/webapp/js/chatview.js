@@ -1,5 +1,4 @@
 var ChatFieldView = function (chatFieldId) {
-
 };
 
 EventTriggers = function(){

@@ -3,7 +3,7 @@ $(document).ready(function () {
         "loginButtonId", "signUpId", "resolveFieldId");
     var registrationView = new ChatRegistrationView(["regUsernameId", "regPasswordId",
         "regButtonId", "regResolveId"]);
-    var chatView = new ChatFieldView();
+    var chatView = new ChatFieldView("#chatMessagesId");
     var service = new ChatService("./chat");
 
     LoginBinder(loginView, service);

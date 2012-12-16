@@ -1,0 +1,69 @@
+body {
+    margin: 0 auto;
+    padding: 0;
+    width: 570px;
+    font: 75%/120% Arial, Helvetica, sans-serif;
+}
+
+a:focus {
+    outline: none;
+}
+
+#chatField  {
+    background: #F0F8FF;
+    height: 800px;
+    margin: 0;
+    padding: 0;
+    border-top: solid 4px #422410;
+    background:   no-repeat center top;
+}
+
+
+.active {
+    background-position: right 12px;
+}
+
+label {
+    color: #B4886B;
+    font-size: 12pt;
+    font-weight: bold;
+    display: block;
+    width: 25%;
+    height: auto;
+    float: left;
+}
+
+label:after {
+    content: ": "
+}
+
+#expression {
+    width: 60%;
+    height: auto;
+    font-family: helvetica, serif;
+    font-size: 10pt;
+    color: #4682b4;
+}
+
+#expression: focus {
+    background-color: #f0f8ff;
+}
+
+#calculateBtn {
+    float: right;
+    text-align: center;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    font: bold 10pt Arial, Helvetica, sans-serif;
+    color: #4682b4;
+}
+
+#resolution {
+    height: auto;
+    width: auto;
+    font-family: helvetica, serif;
+    font-size: 10pt;
+    float: left;
+}
+

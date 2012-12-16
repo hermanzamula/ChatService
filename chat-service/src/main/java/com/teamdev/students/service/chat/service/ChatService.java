@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.teamdev.students.service.chat.service.ExternalMessages.LEFT_CHAT_MESSAGE;
 import static com.teamdev.students.service.chat.storage.ChatStorageFactory.createMessageStorage;
 import static com.teamdev.students.service.chat.storage.ChatStorageFactory.createUserStorage;
 import static com.teamdev.students.service.chat.storage.StorageType.FROM_MAP;
@@ -21,16 +22,12 @@ public class ChatService {
 
     private static final MessageStorage MESSAGE_STORAGE = createMessageStorage(FROM_MAP);
     private static final UserStorage USER_STORAGE = createUserStorage(FROM_MAP); //Store user data
+  //  private static final Map<User, ArrayList<PrivateMessage>> USER_LIST = new HashMap<User, ArrayList<PrivateMessage>>();
+
 
     //Store all changes such  users login, users logout for each user
-    private static final Map<String/*username*/, List<String>> CHANGES_FOR_USER = new HashMap<String, List<String>>();
-    /**
-     * List of users that enter to chat.
-     * Contains last posted private messages (after last request on private messages)
-     */
-    private static final Map<User, List<PrivateMessage>> USER_LIST = new HashMap<User, List<PrivateMessage>>();
-    public static final String ENTER_TO_CHAT_MESSAGE = " enter to chat";
-    public static final String LEFT_CHAT_MESSAGE = " left chat";
+   // private static final Map<String/*username*/, List<String>> CHANGES_FOR_USER = new HashMap<String, List<String>>();
+
 
     public Message findMessage(final Long idMessage) {
         LOGGER.debug("Get message for id " + idMessage);
@@ -45,8 +42,8 @@ public class ChatService {
     public synchronized boolean postPrivate(final PrivateMessage message) {
         LOGGER.debug("post private message: '" + message);
         if (isAlreadyEntered(message.getRecipient())) {
-            final User user = findUser(message.getRecipient());
-            USER_LIST.get(user).add(message);
+            final User user = findUser(message.getRecipient().getName());
+           // USER_LIST.get(user).add(message);
             MESSAGE_STORAGE.addPrivate(message);
             return true;
         }
@@ -57,33 +54,35 @@ public class ChatService {
      * @return true, if such user exists in data storage, false - no such user exists
      */
     public boolean enterChat(final String username, final String password) {
+
         LOGGER.debug("User " + username + " try to enter chat");
-        final User user = USER_STORAGE.getByName(username);
+        final User user = USER_STORAGE.getByName(username.trim());
 
         if (user == null) {
             return false;
         }
 
         if (!isAlreadyEntered(user) &&
-                user.getPassword().equalsIgnoreCase(password)) {
-            USER_LIST.put(user, new ArrayList<PrivateMessage>());
-            CHANGES_FOR_USER.put(user.getName(), new ArrayList<String>());
-            setChanges(username + ENTER_TO_CHAT_MESSAGE);
+                user.getPassword().equalsIgnoreCase(password.trim())) {
+            // USER_LIST.put(user, new ArrayList<PrivateMessage>());
+            //CHANGES_FOR_USER.put(user.getName(), new ArrayList<String>());
+           // setChanges(username + ExternalMessages.ENTER_TO_CHAT_MESSAGE);
             return true;
         }
         return false;
     }
 
-    private void setChanges(final String message) {
+   /* private void setChanges(final String message) {
         final Set<String> users = CHANGES_FOR_USER.keySet();
         for (String user : users) {
             CHANGES_FOR_USER.get(user).add(message);
         }
-    }
+    } */
 
     public void exitChat(final String username) {
+
         LOGGER.debug(username + LEFT_CHAT_MESSAGE);
-        final User user = USER_STORAGE.getByName(username);
+        final User user = USER_STORAGE.getByName(username.trim());
         USER_LIST.remove(user);
         setChanges(username + LEFT_CHAT_MESSAGE);
     }
@@ -98,11 +97,11 @@ public class ChatService {
     }
 
     public boolean isAlreadyEntered(final String username) {
-        return isAlreadyEntered(findUser(username));
+        return isAlreadyEntered(findUser(username.trim()));
     }
 
     public User findUser(final String username) {
-        return USER_STORAGE.getByName(username);
+        return USER_STORAGE.getByName(username.trim());
     }
 
     public Collection<Message> getMessageHistory() {
@@ -130,10 +129,10 @@ public class ChatService {
         return USER_LIST.keySet();
     }
 
-    public List<String> getChangeList(final String username) {
+   /* public List<String> getChangeList(final String username) {
         //TODO may work incorrectly...
         final List<String> changes = CHANGES_FOR_USER.get(username);
         CHANGES_FOR_USER.get(username).clear();
         return changes;
-    }
+    } */
 }

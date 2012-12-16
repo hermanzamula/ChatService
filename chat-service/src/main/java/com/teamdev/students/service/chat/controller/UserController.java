@@ -66,11 +66,11 @@ public class UserController {
         return ControllerUtil.toUserListResponse(service.getUserList());
     }
 
-    @RequestMapping(value = "/changes", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/changes", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public ChangesResponse getChangesFor(@RequestBody UserRequest request) {
         return toResponse(service.getChangeList(request.getUsername()));
     }
-
+       */
 }

@@ -56,7 +56,7 @@ public class MessageController {
         LOGGER.debug("Posting message: " + request);
 
         final boolean entered = service.isAlreadyEntered(request.getUsername());
-        service.postMessage(fromRequest(request, entered));
+        service.postMessage(fromRequest(request, entered, null));
     }
 
     @RequestMapping(value = "/private", method = RequestMethod.POST)
@@ -68,7 +68,7 @@ public class MessageController {
         final boolean entered = service.isAlreadyEntered(request.getRecipient());
         final PrivateMessage message;
         try {
-            message = fromPrivateRequest(request, entered);
+            message = fromPrivateRequest(request, entered, null, null);
         } catch (ChatServiceException e) {
             return e.getErrorMessage();
         }

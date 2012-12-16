@@ -7,7 +7,7 @@ var UserRegistrationData = function (login, pass, color) {
 var UserData = function(login, color){
     this. username = login;
     this. color = color;
-}
+};
 
 var UserRequest = function (username) {
     this.username = username;
@@ -32,8 +32,8 @@ var UserRegistrationResponseData = function (jsonData) {
     this.message = jsonResponseData.message;
 };
 
-var MessageData = function (username, message) {
-    this.username = username;
+var MessageData = function (userData, message) {
+    this.userData = userData;
     this.message = message;
 };
 
@@ -67,18 +67,20 @@ var UserListResponse = function (jsonData) {
     this.users = jsonMessageData.users;
 };
 
-var UserContext = function (userData) {
-    this.localStorage = localStorage;
-    this.localStorage.setItem('chatData', JSON.stringify(userData));
+UserContext = function ( ) {
 };
 
-UserContext.prototype.getUsername = function () {
-    var userData = JSON.parse(this.localStorage.getItem('chatData'));
+UserContext.setContext = function(userData){
+    localStorage.setItem('chatData', JSON.stringify(userData));
+};
+
+UserContext.getUsername = function () {
+    var userData = JSON.parse(localStorage.getItem('chatData'));
     return userData.username;
 };
 
-UserContext.prototype.getUserColor = function () {
-    var userData = JSON.parse(this.localStorage.getItem('chatData'));
+UserContext.getUserColor = function () {
+    var userData = JSON.parse(localStorage.getItem('chatData'));
     return userData.color;
 };
 

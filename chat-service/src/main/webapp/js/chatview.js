@@ -1,12 +1,58 @@
-var ChatFieldView = function (chatFieldId) {
+var ChatFieldView = function (chatFieldId, sendBtn, chatBox, inputField) {
+    this.chatFieldId = "#" + chatFieldId;
+    this.sendBtnId = "#" + sendBtn;
+    this.chatBoxId = "#" + chatBox;
+    this.inputFieldId = "#" + inputField;
+    var instance = this;
+
+    this.chatData = new UserContext();
+    $(sendBtn).click(function () {
+        instance.onSendMessageRequest();
+    });
+};
+
+ChatFieldView.prototype.onSendMessageRequest = function () {
+    var username = UserContext.getUsername();
+    var color = UserContext.getUserColor();
+    var message = $(this.inputFieldId).val();
+
+    if (Util.isPrivateMessage(message)) {
+        var dataPrivate = new MessageData(new UserData(username, color), message);
+        EventTriggers.triggerSendPublicMessageEvent(dataPrivate);
+    } else {
+        var recipient = Util.getRecipientName(message);
+        var data = new MessageData({username:username, color:color, recipient:recipient}, message);
+        EventTriggers.triggerSendPublicMessageEvent(data);
+    }
+
 
 };
 
-EventTriggers = function(){
+Util = function () {
 };
 
-EventTriggers.triggerLoginSuccessEvent = function(data){
+Util.isPrivateMessage = function (message) {
+
+    //TODO: add body
+    var recipient = message.match(/[@+] /gi);
+    return false;
+};
+
+
+
+EventTriggers = function () {
+};
+
+EventTriggers.triggerLoginSuccessEvent = function (data) {
     $(document).trigger(Events.LOGIN_SUCCESS, [data]);
+};
+
+EventTriggers.triggerSendPublicMessageEvent = function (messageData) {
+    $(document).trigger(Events.SEND_PUBLIC_MESSAGE, messageData);
+};
+
+EventTriggers.triggerSendPrivateMessageEvent = function (messageData) {
+    $(document).trigger(Events.SEND_PRIVATE_MESSAGE, messageData);
 };
 
 var ChatRegistrationView = function (chatRegistrationFieldIds) {
@@ -19,6 +65,7 @@ var ChatRegistrationView = function (chatRegistrationFieldIds) {
         instance.onRegistrationRequest();
     })
 };
+
 
 var ChatLoginView = function (chatLoginInputId, passwordInputId, okBtnId, signUpId, resolveId) {
 
@@ -64,9 +111,9 @@ ChatRegistrationView.prototype.onRegistrationRequest = function () {
 };
 
 ChatRegistrationView.prototype.onRegistrationResponse = function (responseData) {
-    if(responseData.ok){
-      EventTriggers.triggerLoginSuccessEvent(responseData);
+    if (responseData.ok) {
+        EventTriggers.triggerLoginSuccessEvent(responseData);
         return;
     }
     $(this.resolveFieldId).css("color", "red").html('<h1>Such username is already used</h1>');
- };
+};

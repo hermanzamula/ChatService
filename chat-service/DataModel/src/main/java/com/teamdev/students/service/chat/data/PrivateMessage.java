@@ -4,9 +4,9 @@ import java.util.Date;
 
 public class PrivateMessage extends Message {
 
-    private String recipient;
+    private User recipient;
 
-    public PrivateMessage(Long messageId, String text, String sender, String recipient, Date postedAt) {
+    public PrivateMessage(Long messageId, String text, User sender, User recipient, Date postedAt) {
         super(messageId, text, sender, postedAt);
         this.recipient = recipient;
     }
@@ -18,7 +18,7 @@ public class PrivateMessage extends Message {
                 '}';
     }
 
-    public String getRecipient() {
+    public User getRecipient() {
         return recipient;
     }
 }

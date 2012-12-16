@@ -24,38 +24,39 @@ public class ControllerUtil {
         if (message == null) {
             throw new ChatServiceException("Message not found");
         }
-        return new MessageResponse(message.getSender(), message.getText(), message.getPostedAt());
+        return new MessageResponse(message.getSender().getName(), message.getText(), message.getPostedAt());
     }
 
     public static MessageResponseList toResponseArray(Collection<Message> messages) {
         final Collection<MessageResponse> responses = new ArrayList<MessageResponse>();
         for (Message m : messages) {
-            final MessageResponse response = new MessageResponse(m.getSender(), m.getText(), m.getPostedAt());
+            final MessageResponse response = new MessageResponse(m.getSender().getName(), m.getText(), m.getPostedAt());
             responses.add(response);
         }
         return new MessageResponseList(responses, responses.isEmpty());
     }
 
-    public static Message fromRequest(final MessagePostRequest request, boolean found)
+    public static Message fromRequest(final MessagePostRequest request, boolean found, User user)
             throws ChatServiceException {
         if (!found) {
             throw new ChatServiceException("User \'" + request.getUsername() + "\' not found");
         }
-        return new Message(createUniqueIndex(), request.getText(), request.getUsername(), new Date());
+        return new Message(createUniqueIndex(), request.getText(), user, new Date());
     }
 
-    public static PrivateMessage fromPrivateRequest(final PrivateMessagePostRequest request, boolean isRecipientFound)
+    public static PrivateMessage fromPrivateRequest(final PrivateMessagePostRequest request, boolean isRecipientFound,
+                                                    User sender, User recipient)
             throws ChatServiceException {
         if (!isRecipientFound) {
             throw new ChatServiceException("User (recipient) '" + request.getRecipient() +
                     "' not found. Sender: " + request.getUsername() + "\'");
         }
         return new PrivateMessage(createUniqueIndex(), request.getText(),
-                request.getUsername(), request.getRecipient(), new Date());
+               sender, recipient, new Date());
     }
 
     public static User fromRequest(UserRegistrationRequest request) {
-        return new User(createUniqueIndex(), request.getUsername(), request.getPassword());
+        return new User(createUniqueIndex(), request.getUsername().trim(), request.getPassword().trim());
     }
 
     public static UserRegistrationResponse toResponse(boolean userNotExists, String username) {
@@ -70,8 +71,8 @@ public class ControllerUtil {
     public static PrivateMessageResponseList toResponse(final Collection<PrivateMessage> privateMessages) {
         final Collection<PrivateMessageResponse> responses = new ArrayList<PrivateMessageResponse>();
         for (PrivateMessage m : privateMessages) {
-            final PrivateMessageResponse response = new PrivateMessageResponse(m.getRecipient(),
-                    m.getText(), m.getPostedAt(), m.getSender());
+            final PrivateMessageResponse response = new PrivateMessageResponse(m.getRecipient().getName(),
+                    m.getText().trim(), m.getPostedAt(), m.getSender().getName());
             responses.add(response);
         }
         return new PrivateMessageResponseList(privateMessages.isEmpty(), responses);

@@ -1,18 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.teamdev.students.service.chat</groupId>
-    <artifactId>chat-service</artifactId>
-    <packaging>war</packaging>
-    <version>1.0</version>
 
-    <name>chat-service Maven Webapp</name>
+    <groupId>com.teamdev.students.chat</groupId>
+    <artifactId>chat-service</artifactId>
+    <version>1.0</version>
+    <modules>
+        <module>Web</module>
+        <module>DataModel</module>
+        <module>DataStorage</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <name>chat-service</name>
     <url>http://maven.apache.org</url>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>3.0.5.RELEASE</spring.version>
     </properties>
+
 
     <dependencies>
 
@@ -73,35 +80,5 @@
             <version>1.2.9</version>
         </dependency>
     </dependencies>
-    <build>
-          <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <webResources>
-                        <resource>
-                            <directory>src/main/*</directory>
-                            <directory>DataModel/src/main/java/*</directory>
-                            <directory>DataStorage/src/main/java/* </directory>
-                        </resource>
-                    </webResources>
-                    <overlays>
-                        <overlay/>
-                        <overlay>
-                            <groupId>com.teamdev.students.service.chat</groupId>
-                            <artifactId>DataModel</artifactId>
-                        </overlay>
-                        <overlay>
-                            <groupId>com.teamdev.students.service.chat</groupId>
-                            <artifactId>DataStorage</artifactId>
-                        </overlay>
-                    </overlays>
-                </configuration>
 
-            </plugin>
-        </plugins>
-        <finalName>chat-service</finalName>
-    </build>
 </project>

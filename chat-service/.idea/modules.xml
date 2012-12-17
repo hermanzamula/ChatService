@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DataModel/DataModel.iml" filepath="$PROJECT_DIR$/DataModel/DataModel.iml" />
       <module fileurl="file://$PROJECT_DIR$/DataStorage/DataStorage.iml" filepath="$PROJECT_DIR$/DataStorage/DataStorage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Web/Web.iml" filepath="$PROJECT_DIR$/Web/Web.iml" />
       <module fileurl="file://$PROJECT_DIR$/chat-service.iml" filepath="$PROJECT_DIR$/chat-service.iml" />
     </modules>
   </component>

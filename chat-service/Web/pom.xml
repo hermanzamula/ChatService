@@ -16,7 +16,9 @@
             <artifactId>DataModel</artifactId>
             <version>1.0</version>
         </dependency>
+
         <dependency>
+
             <groupId>com.teamdev.students.chat</groupId>
             <artifactId>DataStorage</artifactId>
             <version>1.0</version>

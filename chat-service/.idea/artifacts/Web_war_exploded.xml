@@ -11,6 +11,8 @@
           <element id="archive" name="DataModel-1.0.jar">
             <element id="module-output" name="DataModel" />
           </element>
+          <element id="library" level="project" name="Maven: com.teamdev.students.service.chat:DataStorage:1.0" />
+          <element id="library" level="project" name="Maven: com.teamdev.students.service.chat:DataModel:1.0" />
           <element id="library" level="project" name="Maven: javax.servlet:servlet-api:2.5" />
           <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.7.1" />
           <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-core-asl:1.7.1" />

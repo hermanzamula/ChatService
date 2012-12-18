@@ -28,9 +28,9 @@ public class MessageMapStorage implements ChatMessageStorage {
 	}
 
 	@Override
-	public Collection<PrivateMessage> getPrivateByDateRange(Date start, Date end, User recipient) {
+	public synchronized Collection<PrivateMessage> getPrivateByDateRange(Date start, Date end, User recipient) {
 		final Collection<PrivateMessage> messages = privateMessageMap.values();
-		List<PrivateMessage> out = new ArrayList<PrivateMessage>();
+		Collection<PrivateMessage> out = new ArrayList<PrivateMessage>();
 		for (PrivateMessage m : messages) {
 			long time = m.getPostedAt().getTime();
 			if (m.getRecipient().equals(recipient) &&
@@ -42,20 +42,21 @@ public class MessageMapStorage implements ChatMessageStorage {
 	}
 
 	@Override
-	public Collection<Message> getByDateRange(Date start, Date end) {
+	public synchronized Collection<Message> getByDateRange(Date start, Date end) {
 		final Collection<Message> messages = messageMap.values();
-		List<Message> out = new ArrayList<Message>();
+		Collection<Message> out = new ArrayList<Message>();
 		for (Message m : messages) {
 			long time = m.getPostedAt().getTime();
-			if (time >= start.getTime() && time < end.getTime()) {
+			if (time > start.getTime() && time <= end.getTime()) {
 				out.add(m);
 			}
 		}
 		return out;
 	}
 
+
 	@Override
-	public void addPrivate(PrivateMessage message) {
+	public synchronized void addPrivate(PrivateMessage message) {
 		privateMessageMap.put(message.getMessageId(), message);
 	}
 }

@@ -2,8 +2,9 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>Enter to chat</title>
+    <title>Chat</title>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="js/util.js"></script>
     <script type="text/javascript" src="js/model.js"></script>
     <script type="text/javascript" src="js/chatview.js"></script>
     <script type="text/javascript" src="js/service.js"></script>
@@ -17,7 +18,15 @@
     <button type="submit" id="signUpId">Sign up</button>
     <div id="resolveFieldId"></div>
 </div>
-
+<div id="logout">
+    <button id="logoutButton">Logout</button>
+</div>
+<div id="regFieldId">
+    <label for="regUsernameId">You login</label><input type="text" id="regUsernameId">
+    <label for="regPasswordId">You password</label><input type="text" id="regPasswordId">
+    <button type="submit" id="regButtonId">Register</button>
+    <div id="regResolveId"></div>
+</div>
 
 
 <div id="chatFieldId">
@@ -27,31 +36,8 @@
     <div id="inputMessageId">
         <label for="messageTextArea"> </label>
         <textarea rows="3" cols="70" id="messageTextArea"></textarea>
-        <button id="messageTextBtn">Send</button>
+        <button id="sendMessageBtn">Send</button>
     </div>
-</div>
-
-
-<div id="testFieldId">
-    <label for="getMessage">Test message receive:</label>
-    <input type="text" id="getMessage">
-    <button type="submit" id="getMessageBtn">get message</button>
-    <br/>
-    <label for="postMessageId">Test post message:</label>
-    <input type="text" id="postMessageId">
-    <button type="submit" id="postMessageBtn">post message</button>
-    <br/>
-    <label for="getMessages">Test obtaining all messages</label>
-    <input type="text" id="getMessages">
-    <button type="submit" id="getMessagesBtn">get all messages</button>
-    <br/>
-    <label for="postPrivate">Post prvate message</label>
-    <input type="text" id="postPrivate">
-    <button type="submit" id="postPrivateBtn">get all messages</button>
-    <br/>
-    <label for="getPrivateId">Test get private message</label>
-    <input type="text" id="getPrivateId">
-    <button type="submit" id="getPrivateBtn">get all messages</button>
 </div>
 
 </body>

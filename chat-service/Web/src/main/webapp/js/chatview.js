@@ -1,61 +1,49 @@
-var ChatFieldView = function (chatFieldId, sendBtn, chatBox, inputField) {
+var ChatFieldView = function (chatFieldId, sendBtn, chatBox, inputField, logoutBtn) {
     this.chatFieldId = "#" + chatFieldId;
     this.sendBtnId = "#" + sendBtn;
-    this.chatBoxId = "#" + chatBox;
+    this.chatMessagesId = "#" + chatBox;
     this.inputFieldId = "#" + inputField;
+    this.logoutBtn = "#" + logoutBtn;
+
     var instance = this;
 
-    this.chatData = new UserContext();
-    $(sendBtn).click(function () {
+    $(this.sendBtnId).click(function () {
         instance.onSendMessageRequest();
+    });
+
+    $(this.logoutBtn).click(function () {
+        ChattingTriggers.triggerLogoutEvent({});
     });
 };
 
 ChatFieldView.prototype.onSendMessageRequest = function () {
-    var username = UserContext.getUsername();
-    var color = UserContext.getUserColor();
     var message = $(this.inputFieldId).val();
-
     if (Util.isPrivateMessage(message)) {
-        var dataPrivate = new MessageData(new UserData(username, color), message);
-        EventTriggers.triggerSendPublicMessageEvent(dataPrivate);
+        console.log("Private message: " + message);
+        ChattingTriggers.triggerSendPrivateMessageEvent({recipient:recipient, message:message});
     } else {
-        var recipient = Util.getRecipientName(message);
-        var data = new MessageData({username:username, color:color, recipient:recipient}, message);
-        EventTriggers.triggerSendPublicMessageEvent(data);
+        ChattingTriggers.triggerSendPublicMessageEvent({message:message});
     }
 };
 
-Util = function () {
+ChatFieldView.prototype.onReceivePublicMessages = function (messages) {
+    for (var i=0; i<messages.length; i++) {
+        $(this.chatMessagesId).after(
+                "<span class='username' style='color:" + messages[i].color + "'>" + messages[i].username +
+                        "</span> at <span class = 'date'>" + messages[i].date + "</span>: <span class='messageText'>"
+                        + messages[i].text + "</span></br>"
+        )
+    }
 };
 
-Util.isPrivateMessage = function (message) {
-
-    //TODO: add body
-    console.log("recipient: " + recipient);
-    return true;
-};
-
-Util.getRecipientFromMessage = function(message) {
-
-    return  message.trim().match(/^@[a-zA-Z0-9-_]/gi);
-};
-
-
-
-EventTriggers = function () {
-};
-
-EventTriggers.triggerLoginSuccessEvent = function (data) {
-    $(document).trigger(Events.LOGIN_SUCCESS, [data]);
-};
-
-EventTriggers.triggerSendPublicMessageEvent = function (messageData) {
-    $(document).trigger(Events.SEND_PUBLIC_MESSAGE, messageData);
-};
-
-EventTriggers.triggerSendPrivateMessageEvent = function (messageData) {
-    $(document).trigger(Events.SEND_PRIVATE_MESSAGE, messageData);
+ChatFieldView.prototype.onReceivePrivateMessages = function(privateMessages) {
+    for (var i =0; i<privateMessages.length; i++) {
+        $(this.chatMessagesId).after(
+                "<span class='username' style='color:" + privateMessages[i].color + "'>@" + privateMessages[i].username +
+                "</span> send you at <span class = 'date'>" + privateMessages[i].date + "</span>: <span class='messageText'>"
+                + privateMessages[i].text + "</span></br>"
+        )
+    }
 };
 
 var ChatRegistrationView = function (chatRegistrationFieldIds) {
@@ -66,7 +54,7 @@ var ChatRegistrationView = function (chatRegistrationFieldIds) {
     var instance = this;
     $(okBtnId).click(function () {
         instance.onRegistrationRequest();
-    })
+    });
 };
 
 
@@ -88,22 +76,17 @@ ChatLoginView.prototype.onLoginRequest = function () {
     var username = $(this.loginId).val();
     var password = $(this.passwordId).val();
     var request = new UserRegistrationData(username, password);
-    $(document).trigger(Events.LOGIN, [request]);
+    LoginViewTriggers.triggerLoginRequestEvent(request);
 };
 
 ChatLoginView.prototype.onSignUpRequest = function () {
-    $(document).trigger(Events.SIGN_UP);
+    LoginViewTriggers.triggerSignUpEvent();
 };
 
 /**
- *
  * @param loginResponse - type of UserResponseData
  */
-ChatLoginView.prototype.onLoginResponse = function (loginResponse) {
-    if (loginResponse.ok) {
-        var request = new UserData(loginResponse.username, loginResponse.color);
-        EventTriggers.triggerLoginSuccessEvent(request);
-    }
+ChatLoginView.prototype.onLoginFailedResponse = function (loginResponse) {
     $(this.resolveId).html("<h1>Wrong username or password</h1>");
 };
 
@@ -114,10 +97,6 @@ ChatRegistrationView.prototype.onRegistrationRequest = function () {
     $(document).trigger(Events.REGISTRATION, [regRequest]);
 };
 
-ChatRegistrationView.prototype.onRegistrationResponse = function (responseData) {
-    if (responseData.ok) {
-        EventTriggers.triggerLoginSuccessEvent(responseData);
-        return;
-    }
+ChatRegistrationView.prototype.onRegistrationFailedResponse = function (responseData) {
     $(this.resolveFieldId).css("color", "red").html('<h1>Such username is already used</h1>');
 };

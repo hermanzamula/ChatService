@@ -18,6 +18,7 @@ public class UserResponse {
 	public UserResponse(boolean ok, String username, String color) {
         isOk = ok;
         this.username = username;
+		this.color = color;
     }
 
     public boolean isOk() {

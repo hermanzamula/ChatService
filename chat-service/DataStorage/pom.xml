@@ -13,10 +13,12 @@
 
     <dependencies>
         <dependency>
+
             <groupId>com.teamdev.students.chat</groupId>
             <artifactId>DataModel</artifactId>
             <version>1.0</version>
         </dependency>
+
     </dependencies>
 
 </project>

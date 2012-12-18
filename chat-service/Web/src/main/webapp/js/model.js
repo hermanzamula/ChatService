@@ -67,38 +67,4 @@ var UserListResponse = function (jsonData) {
     this.users = jsonMessageData.users;
 };
 
-UserContext = function ( ) {
-};
 
-UserContext.setContext = function(userData){
-    localStorage.setItem('chatData', JSON.stringify(userData));
-};
-
-UserContext.getUsername = function () {
-    var userData = JSON.parse(localStorage.getItem('chatData'));
-    return userData.username;
-};
-
-UserContext.getUserColor = function () {
-    var userData = JSON.parse(localStorage.getItem('chatData'));
-    return userData.color;
-};
-
-var Events = {
-    SEND_PUBLIC_MESSAGE:"send-public-message",
-    SEND_PRIVATE_MESSAGE:"send-private-message",
-    SIGN_UP:"sign-up",
-    LOGIN:"sign-out",
-    LOGOUT:"logout",
-    REGISTRATION:"registration",
-    PUBLIC_MESSAGE_RESPONSE:"public-message-response",
-    PRIVATE_MESSAGE_RESPONSE:"private-message-response",
-    REGISTRATION_RESPONSE:"registration-response",
-    LOGIN_RESPONSE:"login-response",
-    GET_USER_LIST_RESPONSE:"get-user-list-response",
-    GET_SERVER_CHANGES_RESPONSE:"get-server-changes-response",
-    GET_SERVER_CHANGES_REQUEST:"get-server-changes-request",
-    GET_USER_LIST_REQUEST:"get-user-list-request",
-    LOGOUT_RESPONSE:"logout-response",
-    LOGIN_SUCCESS:"login-success"
-};

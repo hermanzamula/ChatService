@@ -41,11 +41,7 @@ public class ControllerUtil {
 		return new MessageResponseList(responses, responses.isEmpty());
 	}
 
-	public static Message fromRequest(final MessagePostRequest request, boolean found, User user)
-			throws ChatServiceException {
-		if (!found) {
-			throw new ChatServiceException("User \'" + request.getUsername() + "\' not found");
-		}
+	public static Message fromRequest(final MessagePostRequest request, User user) {
 		return new Message(UniqueIdCreator.createUniqueIndex(), request.getText(), user, new Date());
 	}
 

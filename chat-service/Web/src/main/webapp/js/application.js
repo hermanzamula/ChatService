@@ -3,23 +3,29 @@ $(document).ready(function () {
             "loginButtonId", "signUpId", "resolveFieldId");
     var registrationView = new ChatRegistrationView(["regUsernameId", "regPasswordId",
         "regButtonId", "regResolveId"]);
-    var chatView = new ChatFieldView();
+    var chatView = new ChatFieldView("chatFieldId", "sendMessageBtn", "chatMessagesId", "messageTextArea", "logoutButton");
     var service = new ChatService("./chat");
 
     LoginBinder(loginView, service);
     RegistrationBinder(registrationView, service);
-    ChattingBinder(chatView, service);
+    ChatBinder(chatView, service);
+
+});
+
+$(window).unload(function(){
+    alert("Пока, пользователь!");
 });
 
 var LoginBinder = function (loginView, service) {
 
     $(document).bind(Events.LOGIN, function (e, data) {
-        service.onLogin(data);
+       service.onLogin(data);
     });
 
-    $(document).bind(Events.LOGIN_RESPONSE, function (e, data) {
-        loginView.onLoginResponse(data);
+    $(document).bind(Events.LOGIN_FAILED, function (e, data) {
+       loginView.onLoginFailedResponse(data);
     });
+
 
     $(document).bind(Events.SIGN_UP, function (e) {
         service.onSignUp();
@@ -30,8 +36,23 @@ var LoginBinder = function (loginView, service) {
         service.onLoginSuccess(data);
     });
 
-    $(document).bind(Events.PUBLIC_MESSAGE_RESPONSE, function (e, data) {
-        console.log(JSON.stringify(data));
+
+};
+
+var ChatBinder = function (chatview, service) {
+    $(document).bind(Events.LOGOUT, function (e, data) {
+        service.onLogout(data);
+    });
+
+
+   $(document).bind(Events.PUBLIC_MESSAGE_RESPONSE, function (e, data) {
+       console.log("bind public message");
+       chatview.onReceivePublicMessages(data);
+    });
+
+    $(document).bind(Events.PRIVATE_MESSAGE_RESPONSE, function (e, data) {
+        console.log("bind private message");
+        chatview.onReceivePrivateMessages(data);
     });
 
     $(document).bind(Events.PRIVATE_MESSAGE_RESPONSE, function (e, data) {
@@ -39,18 +60,21 @@ var LoginBinder = function (loginView, service) {
         console.log(JSON.stringify(data));
     });
 
+    $(document).bind(Events.SEND_PUBLIC_MESSAGE, function (e, data) {
+        console.log("send public message");
+        service.onSendPublicMessage(data);
+    });
 };
 
 var RegistrationBinder = function (regview, service) {
     $(document).bind(Events.REGISTRATION, function (e, data) {
         service.onRegistration(data);
     });
-    $(document).bind(Events.REGISTRATION_RESPONSE, function (e, data) {
-        regview.onRegistrationResponse(data);
+    $(document).bind(Events.REGISTRATION_FAILED, function (e, data) {
+        regview.onRegistrationFailedResponse(data);
     });
 
-};
-
-var ChattingBinder = function (chatView, service) {
-
+    $(document).bind(Events.REGISTRATION_SUCCESS, function (e, data) {
+        service.onRegistrationSuccess(data);
+    })
 };

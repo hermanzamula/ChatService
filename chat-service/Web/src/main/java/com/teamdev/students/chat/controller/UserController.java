@@ -30,9 +30,16 @@ public class UserController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@ResponseBody
 	public UserResponse login(@RequestBody UserLoginRequest request) {
-		LOGGER.debug("\n User " + request.getUsername() + " trying enter to chat");
-		final boolean success = service.enterChat(request.getUsername(), request.getPassword());
-		return new UserResponse(success, request.getUsername(), request.getColor());
+		final String username = request.getUsername();
+		LOGGER.debug("\n User " + username + " trying enter to chat");
+		final boolean success = service.enterChat(username, request.getPassword());
+		String color;
+		if (success) {
+			color = service.findUser(username).getColor();
+		} else {
+			color = "";
+		}
+		return new UserResponse(success, username, color);
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)

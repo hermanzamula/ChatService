@@ -31,6 +31,7 @@ public class MessageController {
 
 	@RequestMapping(value = "/receive", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
+	@ResponseBody
 	public MessageResponseList getMessages(@RequestBody UserRequest request) throws ChatServiceException {
 		final Collection<Message> messageHistory = service.getMessages(request.getUsername());
 		return toResponseArray(messageHistory);
@@ -47,8 +48,7 @@ public class MessageController {
 	public void postPublicMessage(@RequestBody MessagePostRequest request) throws ChatServiceException {
 		LOGGER.debug("Posting message: " + request);
 		final String username = request.getUsername();
-		final boolean entered = service.isAlreadyEntered(username);
-		service.postMessage(fromRequest(request, entered, service.findUser(username)));
+		service.postMessage(fromRequest(request, service.findUser(username)));
 	}
 
 	@RequestMapping(value = "/private", method = RequestMethod.POST)

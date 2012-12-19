@@ -11,49 +11,38 @@ public class MessageMapStorage implements ChatMessageStorage {
 	/**
 	 * First param - Message id, second -  message itself
 	 */
-	private Map<Long, Message> messageMap = new HashMap<Long, Message>();
-	private Map<Long, PrivateMessage> privateMessageMap = new HashMap<Long, PrivateMessage>();
+	private SortedMap<Long, Message> messageMap = new TreeMap<Long, Message>();
+	private SortedMap<Long, PrivateMessage> privateMessageMap = new TreeMap<Long, PrivateMessage>();
 
 	@Override
 	public synchronized void add(Message message) {
 		messageMap.put(message.getMessageId(), message);
 	}
 
-	public Message get(Long messageId) {
-		return messageMap.get(messageId);
-	}
-
-	public PrivateMessage getPrivate(Long messageId) {
-		return privateMessageMap.get(messageId);
+	@Override
+	public List<Message> getLastsPublicAfter(long messageId) {
+		 return new ArrayList<Message>(messageMap.tailMap(messageId+1).values());
 	}
 
 	@Override
-	public synchronized Collection<PrivateMessage> getPrivateByDateRange(Date start, Date end, User recipient) {
-		final Collection<PrivateMessage> messages = privateMessageMap.values();
-		Collection<PrivateMessage> out = new ArrayList<PrivateMessage>();
-		for (PrivateMessage m : messages) {
-			long time = m.getPostedAt().getTime();
-			if (m.getRecipient().equals(recipient) &&
-					time >= start.getTime() && time < end.getTime()) {
-				out.add(m);
+	public List<PrivateMessage> getLastsPrivateAfter(long messageId, User user) {
+		final  List<PrivateMessage> messages = new ArrayList<PrivateMessage>();
+		final SortedMap<Long, PrivateMessage> lastMessages = privateMessageMap.tailMap(messageId+1);
+		for(PrivateMessage m: lastMessages.values()){
+			if(m.getRecipient().compareTo(user)==0){
+				messages.add(m);
 			}
 		}
-		return out;
+		return messages;
 	}
 
 	@Override
-	public synchronized Collection<Message> getByDateRange(Date start, Date end) {
-		final Collection<Message> messages = messageMap.values();
-		Collection<Message> out = new ArrayList<Message>();
-		for (Message m : messages) {
-			long time = m.getPostedAt().getTime();
-			if (time > start.getTime() && time <= end.getTime()) {
-				out.add(m);
-			}
+	public long getLastMessageId() {
+		if(messageMap.isEmpty()){
+			return 0;
 		}
-		return out;
+		return  messageMap.lastKey();
 	}
-
 
 	@Override
 	public synchronized void addPrivate(PrivateMessage message) {

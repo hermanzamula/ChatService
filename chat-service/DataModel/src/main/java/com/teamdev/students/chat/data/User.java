@@ -1,8 +1,8 @@
 package com.teamdev.students.chat.data;
 
-public class User {
+public class User implements Comparable<User> {
 
-    private Long id;
+    private long id;
     private String name;
     private String password;
 	private String color;
@@ -19,18 +19,18 @@ public class User {
         return password;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public User(Long Id, String name, String password, String color) {
+    public User(long Id, String name, String password, String color) {
         this.id = Id;
         this.name = name;
         this.password = password;
 		this.color = color;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -47,4 +47,9 @@ public class User {
                 ", password='" + password + '\'' +
                 '}';
     }
+
+	@Override
+	public int compareTo(User o) {
+		return Long.compare(o.getId(), o.getId());
+	}
 }

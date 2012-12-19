@@ -9,7 +9,7 @@ public class PrivateMessage extends Message {
 
     private User recipient;
 
-    public PrivateMessage(Long messageId, String text, User sender, User recipient, Date postedAt) {
+    public PrivateMessage(long messageId, String text, User sender, User recipient, Date postedAt) {
         super(messageId, text, sender, postedAt);
         this.recipient = recipient;
     }

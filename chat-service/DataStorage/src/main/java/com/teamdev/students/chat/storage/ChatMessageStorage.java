@@ -12,9 +12,13 @@ public interface ChatMessageStorage {
 
 	void add(Message message);
 
-	Collection<PrivateMessage> getPrivateByDateRange(final Date start, Date end, User recipient);
 
-	Collection<Message> getByDateRange(final Date date, final Date end);
+	List<Message> getLastsPublicAfter(final long messageId);
+
+	 List<PrivateMessage> getLastsPrivateAfter(long messageId, User user);
+
+
+	long getLastMessageId();
 
 	void addPrivate(PrivateMessage message);
 }

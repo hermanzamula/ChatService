@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class Message implements Comparable<Date> {
 
-    private Long messageId;
+    private long messageId;
     private String text;
     private User sender;
     private Date postedAt;
@@ -21,14 +21,14 @@ public class Message implements Comparable<Date> {
                 '}';
     }
 
-    public Message(Long messageId, String text, User sender, Date postedAt) {
+    public Message(long messageId, String text, User sender, Date postedAt) {
         this.messageId = messageId;
         this.text = text;
         this.sender = sender;
         this.postedAt = postedAt;
     }
 
-    public Long getMessageId() {
+    public long getMessageId() {
         return messageId;
     }
 

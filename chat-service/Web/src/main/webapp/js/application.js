@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    var loginView = new ChatLoginView("usernameFieldId", "passwordFieldId",
-            "loginButtonId", "signUpId", "resolveFieldId");
-    var registrationView = new ChatRegistrationView(["regUsernameId", "regPasswordId",
+    var loginView = new ChatLoginView("loginFieldId", "usernameFieldId", "passwordFieldId",
+            "loginButtonId",  "resolveFieldId");
+    var registrationView = new ChatRegistrationView(["regFieldId","regUsernameId", "regPasswordId",
         "regButtonId", "regResolveId"]);
     var chatView = new ChatFieldView("chatFieldId", "sendMessageBtn", "chatMessagesId", "messageTextArea", "logoutButton");
     var service = new ChatService("./chat");
@@ -9,6 +9,9 @@ $(document).ready(function () {
     LoginBinder(loginView, service);
     RegistrationBinder(registrationView, service);
     ChatBinder(chatView, service);
+
+    loginView.decorate("loginPanelButtonId");
+    registrationView.decorate("regPanelButtonId");
 
 });
 

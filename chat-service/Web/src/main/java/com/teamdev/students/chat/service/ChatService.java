@@ -4,29 +4,28 @@ import com.teamdev.students.chat.data.Message;
 import com.teamdev.students.chat.data.PrivateMessage;
 import com.teamdev.students.chat.data.User;
 import com.teamdev.students.chat.storage.ChatMessageStorage;
+import com.teamdev.students.chat.storage.MessageMapStorage;
+import com.teamdev.students.chat.storage.UserMapStorage;
 import com.teamdev.students.chat.storage.UserStorage;
 import com.teamdev.students.chat.util.ChatServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.teamdev.students.chat.service.ExternalMessages.LEFT_CHAT_MESSAGE;
-import static com.teamdev.students.chat.storage.ChatStorageFactory.createMessageStorage;
-import static com.teamdev.students.chat.storage.ChatStorageFactory.createUserStorage;
-import static com.teamdev.students.chat.storage.StorageType.MAP_STORAGE;
 
 @Service
 public class ChatService {
 
 	private static final Logger LOGGER = Logger.getLogger(ChatService.class);
 
-	private static final ChatMessageStorage MESSAGE_STORAGE = createMessageStorage(MAP_STORAGE);
-	private static final UserStorage USER_STORAGE = createUserStorage(MAP_STORAGE); //Store user data
-    private static final Map<User, Date> USER_LIST = new HashMap<User, Date>();  //Store users and its last request date
+	private static final ChatMessageStorage MESSAGE_STORAGE = new MessageMapStorage();
+	private static final UserStorage USER_STORAGE = new UserMapStorage();
+
+	//Store user data
+	private static final Map<User, Long> USER_LIST = new HashMap<User, Long>();    //Store users and its last request date
+	private static final long LIST_EMPTY = -1;
 
 	public synchronized void postMessage(final Message message) {
 		LOGGER.debug("post message: \'" + message + " " + message.getPostedAt());
@@ -63,12 +62,11 @@ public class ChatService {
 	}
 
 	private void addUser(User user) {
-		USER_LIST.put(user, new Date());
+		USER_LIST.put(user, MESSAGE_STORAGE.getLastMessageId());
 	}
 
 
 	public void exitChat(final String username) {
-
 		LOGGER.debug(username + LEFT_CHAT_MESSAGE);
 		final User user = USER_STORAGE.getByName(username.trim());
 		USER_LIST.remove(user);
@@ -90,11 +88,24 @@ public class ChatService {
 
 	public synchronized Collection<Message> getMessages(String username) {
 		final User user = findUser(username.trim());
-		final Date lastDate = USER_LIST.get(user);
-		final Date end = new Date();
-		final Collection<Message> messages = MESSAGE_STORAGE.getByDateRange(lastDate, end);
-		USER_LIST.put(user, end);
+		final long lastMessage = USER_LIST.get(user);
+		List<Message> messages = new ArrayList<Message>();
+		if (lastMessage == MESSAGE_STORAGE.getLastMessageId()) {
+			return messages;
+		}
+		messages = MESSAGE_STORAGE.getLastsPublicAfter(lastMessage);
+		final long lastMessageId = getLastMessageId(messages);
+		if (lastMessageId != LIST_EMPTY) {
+			USER_LIST.put(user, lastMessageId);
+		}
 		return messages;
+	}
+
+	private long getLastMessageId(List<? extends Message> messages) {
+		if (messages.isEmpty()) {
+			return LIST_EMPTY;
+		}
+		return messages.get(messages.size() - 1).getMessageId();
 	}
 
 	/**
@@ -116,13 +127,13 @@ public class ChatService {
 
 	public synchronized Collection<PrivateMessage> getPrivates(final String username) {
 		final User user = findUser(username.trim());
-		final Date lastDate = USER_LIST.get(user);
-		final Date date = new Date();
-		LOGGER.debug("last: " + lastDate.getTime() + " new: " + date.getTime());
-		final Collection<PrivateMessage> messages = MESSAGE_STORAGE.getPrivateByDateRange(lastDate, date, user);
-		USER_LIST.put(user, date);
-		return messages;
+		final long lastMessage = USER_LIST.get(user);
+		if (lastMessage == MESSAGE_STORAGE.getLastMessageId()) {
+			return  new ArrayList<PrivateMessage>();
+		}
+		return MESSAGE_STORAGE.getLastsPrivateAfter(lastMessage, user);
 	}
+
 
 	public Collection<User> getUserList() {
 		return USER_LIST.keySet();

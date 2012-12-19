@@ -27,48 +27,54 @@ ChatFieldView.prototype.onSendMessageRequest = function () {
 };
 
 ChatFieldView.prototype.onReceivePublicMessages = function (messages) {
-    for (var i=0; i<messages.length; i++) {
-        $(this.chatMessagesId).after(
+    for (var i = 0; i < messages.length; i++) {
+        $(this.chatMessagesId).append(
                 "<span class='username' style='color:" + messages[i].color + "'>" + messages[i].username +
-                        "</span> at <span class = 'date'>" + messages[i].date + "</span>: <span class='messageText'>"
-                        + messages[i].text + "</span></br>"
+                        "</span> at <span class = 'date'>" + messages[i].date + "</span>: <span class='messageText'><pre>"
+                        + messages[i].text + "</pre></span></br>"
         )
     }
 };
 
-ChatFieldView.prototype.onReceivePrivateMessages = function(privateMessages) {
-    for (var i =0; i<privateMessages.length; i++) {
-        $(this.chatMessagesId).after(
+ChatFieldView.prototype.onReceivePrivateMessages = function (privateMessages) {
+    for (var i = 0; i < privateMessages.length; i++) {
+        $(this.chatMessagesId).append(
                 "<span class='username' style='color:" + privateMessages[i].color + "'>@" + privateMessages[i].username +
-                "</span> send you at <span class = 'date'>" + privateMessages[i].date + "</span>: <span class='messageText'>"
-                + privateMessages[i].text + "</span></br>"
+                        "</span> send you at <span class = 'date'>" + privateMessages[i].date + "</span>: <span class='messageText'><pre>"
+                        + privateMessages[i].text + "</pre></span></br>"
         )
     }
 };
 
 var ChatRegistrationView = function (chatRegistrationFieldIds) {
-    this.regloginId = "#" + chatRegistrationFieldIds[0];
-    this.regpasswordId = "#" + chatRegistrationFieldIds[1];
-    var okBtnId = "#" + chatRegistrationFieldIds[2];
-    this.resolveFieldId = "#" + chatRegistrationFieldIds[3];
+    this.regFieldId = "#" + chatRegistrationFieldIds[0];
+    this.regloginId = "#" + chatRegistrationFieldIds[1];
+    this.regpasswordId = "#" + chatRegistrationFieldIds[2];
+    this.okBtnId = "#" + chatRegistrationFieldIds[3];
+    this.resolveFieldId = "#" + chatRegistrationFieldIds[4];
     var instance = this;
-    $(okBtnId).click(function () {
+    $(this.okBtnId).click(function () {
         instance.onRegistrationRequest();
     });
 };
 
+ChatRegistrationView.prototype.decorate = function (regButton ) {
+    this.regButtonClass = "#" + regButton ;
+    slideDecorator(this.regButtonClass, this.regFieldId);
+    slideDecorator(this.okBtnId, this.regFieldId);
+};
 
-var ChatLoginView = function (chatLoginInputId, passwordInputId, okBtnId, signUpId, resolveId) {
+
+var ChatLoginView = function (loginFieldId, chatLoginInputId, passwordInputId, okBtnId, resolveId) {
 
     this.loginId = "#" + chatLoginInputId;
     this.passwordId = "#" + passwordInputId;
     this.resolveId = "#" + resolveId;
+    this.chatFieldId = "#" + loginFieldId;
+    this.loginButtonId = "#" + okBtnId;
     var instance = this;
-    $("#" + okBtnId).click(function () {
+    $(this.loginButtonId).click(function () {
         instance.onLoginRequest();
-    });
-    $("#" + signUpId).click(function () {
-        instance.onSignUpRequest();
     });
 };
 
@@ -89,6 +95,22 @@ ChatLoginView.prototype.onSignUpRequest = function () {
 ChatLoginView.prototype.onLoginFailedResponse = function (loginResponse) {
     $(this.resolveId).html("<h1>Wrong username or password</h1>");
 };
+
+
+function slideDecorator(button, panel) {
+    $(button).click(function () {
+        $(panel).slideToggle("slow");
+        $(this).toggleClass("active");
+        return false;
+    });
+}
+
+ChatLoginView.prototype.decorate = function (actionButton) {
+    this.helpButtonClass = "#" + actionButton;
+    slideDecorator(this.helpButtonClass, this.chatFieldId);
+    slideDecorator(this.loginButtonId, this.chatFieldId);
+};
+
 
 ChatRegistrationView.prototype.onRegistrationRequest = function () {
     var login = $(this.regloginId).val();

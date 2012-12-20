@@ -2,7 +2,8 @@ body {
     margin: 0 auto;
     padding: 0;
     height: 600px;
-    width: 800px;
+    width: auto;
+    max-width: 800px;
     font: 75%/120% Arial, Helvetica, sans-serif;
 }
 
@@ -19,11 +20,11 @@ a:focus {
 .slide {
     margin: 0 auto;
     margin-bottom: 15px;
-    padding: 0 ;
+    padding: 0;
     border-top: solid 4px #422410;
     background: url("/recources/img/helpButton.gif") no-repeat center top;
     float: left;
-    width: 33%;
+    width: 25%;
 }
 
 .slidePanelButton {
@@ -44,12 +45,13 @@ a:focus {
 }
 
 #chatMessagesId {
-    max-height: 500px;
+    max-height: 400px;
     min-height: 200px;
-    border: solid 3px #76c3dc
+    border: solid 3px #76c3dc;
+    overflow-y: scroll;
 }
 
-label, #usernameFieldId, #passwordFieldId, #regUsernameId, #regPasswordId, #colorInputId {
+label, #usernameFieldId, #passwordFieldId, #regUsernameId, #regPasswordId {
     margin: 0 auto;
     padding: 0;
     display: block;
@@ -57,6 +59,12 @@ label, #usernameFieldId, #passwordFieldId, #regUsernameId, #regPasswordId, #colo
     font-size: 12pt;
     font-weight: bold;
     width: 25%;
+}
+
+#colorInputId {
+    margin: 0 auto;
+    padding: 0;
+    display: block;
 }
 
 label {
@@ -139,28 +147,37 @@ label:after {
 
 #messageTextArea {
     border: solid 2px #76c3dc;
-    width: 650px;
+    width: auto;
     max-width: 650px;
     float: left;
-    overflow-x: scroll;
     overflow-y: scroll;
 
 }
 
 .username {
-    font : bold 12pt Arial, Helvetica, sans-serif;
-     width: 80px;
-    display: inline-block;
-
+    font: bold 10pt Arial, Helvetica, sans-serif;
+    width: 80px;
+    display:  inline-block;
 }
 
 .date {
-    display: inline-block;
     font: italic 12pt Arial, Helvetica, sans-serif;
+    display:  inline-block;
 }
+
 .messageText {
-    display: inline-block;
-    font: normal 11pt Arial, Helvetica, sans-serif;
+    font: normal 10pt Arial, Helvetica, sans-serif;
+    display:  inline-block;
+}
+
+.messageBlock {
+    display: block;
+    max-width: inherit;
+}
+
+#resolveFieldId {
+    text-align: center;
+    font: bold 14pt Arial, Helvetica, sans-serif;
 }
 
 

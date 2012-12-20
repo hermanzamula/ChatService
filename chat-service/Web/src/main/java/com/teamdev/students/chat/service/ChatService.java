@@ -24,6 +24,11 @@ public class ChatService {
 	private static final UserStorage USER_STORAGE = new UserMapStorage();
 
 	//Store user data
+
+    /**
+     * TODO: make timestamp on client side { lastMessageId: msgID } and delete USER_LIST
+     */
+
 	private static final Map<User, Long> USER_LIST = new HashMap<User, Long>();    //Store users and its last request date
 	private static final long LIST_EMPTY = -1;
 

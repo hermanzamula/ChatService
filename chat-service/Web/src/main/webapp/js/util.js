@@ -19,19 +19,24 @@ var Events = {
 
 };
 
-LoginViewTriggers = function () {
+ViewTriggers = function () {
 };
 
-LoginViewTriggers.triggerSignUpEvent = function () {
+ViewTriggers.triggerSignUpEvent = function () {
     $(document).trigger(Events.SIGN_UP);
 };
 
-LoginViewTriggers.triggerLoginRequestEvent = function (loginData) {
+ViewTriggers.triggerLoginRequestEvent = function (loginData) {
     $(document).trigger(Events.LOGIN, [loginData]);
+};
+
+ViewTriggers.triggerRegistrationRequestEvent = function (data) {
+    $(document).trigger(Events.REGISTRATION, [data]);
 };
 
 
 ChattingTriggers = function () {
+
 };
 
 
@@ -176,14 +181,20 @@ ChatUtil.toPrivateMessageRequest = function (text, from, recipient) {
 };
 
 ChatUtil.escapeForbiddenElements = function (text) {
-    return text.replace(/<[^\s].*?>/g, "<esctag>");
+    return text.replace(/<[^\s].*?>/g, "<esctag>")
 };
 
 ChatUtil.getGlobalUserData = function () {
     return new TransferUserData(GlobalUserData.getUsername(), GlobalUserData.getColor());
 };
 
-ChatUtil.isUserEnter = function(){
+ChatUtil.isUserEnter = function () {
     var username = GlobalUserData.getUsername();
-    return  username!=null;
+    return  username != null;
+};
+
+ChatUtil.clearFields = function (fields) {
+    for (var i = 0; i < fields.length; i++) {
+        $(fields[i]).val("");
+    }
 };

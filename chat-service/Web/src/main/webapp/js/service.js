@@ -31,8 +31,6 @@ ChatService.prototype.startReceivePublicMessage = function () {
             var response = JSON.parse(JSON.stringify(data));
             if (response.empty == false) {
                 ServiceTriggers.triggerGetPublicMessageResponse(ChatUtil.fromPublicMessagesResponse(response));
-            } else {
-                //console.log(JSON.stringify(data));
             }
         });
     };

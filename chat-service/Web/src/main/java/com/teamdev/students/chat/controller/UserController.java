@@ -8,7 +8,6 @@ import com.teamdev.students.chat.controller.dto.response.UserRegistrationRespons
 import com.teamdev.students.chat.controller.dto.response.UserResponse;
 import com.teamdev.students.chat.data.User;
 import com.teamdev.students.chat.service.ChatService;
-import com.teamdev.students.chat.service.UserSession;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -24,7 +23,6 @@ public class UserController {
 
 	@Inject
 	private ChatService service;
-
 
 	private static final Logger LOGGER = Logger.getLogger(UserController.class);
 

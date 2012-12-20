@@ -9,7 +9,6 @@ import com.teamdev.students.chat.data.Message;
 import com.teamdev.students.chat.data.PrivateMessage;
 import com.teamdev.students.chat.data.User;
 import com.teamdev.students.chat.service.ChatService;
-import com.teamdev.students.chat.service.UserSession;
 import com.teamdev.students.chat.util.ChatServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -28,8 +27,6 @@ public class MessageController {
 
 	@Inject
 	private ChatService service;
-
-
 
 	@RequestMapping(value = "/receive", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)

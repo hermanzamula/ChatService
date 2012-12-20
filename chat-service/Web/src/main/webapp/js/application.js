@@ -1,12 +1,28 @@
 $(document).ready(function () {
 
     //TODO: Make input params in JSON format
-    var loginView = new ChatLoginView("loginFieldId", "usernameFieldId", "passwordFieldId",
-            "loginButtonId",  "resolveFieldId");
-    var registrationView = new ChatRegistrationView(["regFieldId","regUsernameId",
-        "regPasswordId", "regButtonId", "regResolveId", "colorInputId"]);
-    var chatView = new ChatFieldView("chatFieldId", "sendMessageBtn", "chatMessagesId",
-            "messageTextArea", "logoutButton");
+    var loginView = new ChatLoginView({
+        field:"loginFieldId",
+        login:"usernameFieldId",
+        password:"passwordFieldId",
+        loginBtn:"loginButtonId",
+        resolve:"resolveFieldId"
+    });
+
+    var registrationView = new ChatRegistrationView({
+        field:"regFieldId",
+        login:"regUsernameId",
+        password:"regPasswordId",
+        okBtn:"regButtonId",
+        resolve:"resolveFieldId",
+        colorInput:"colorInputId"});
+
+    var chatView = new ChatFieldView({
+        field:"chatFieldId",
+        sendBtn:"sendMessageBtn",
+        messages:"chatMessagesId",
+        inputField:"messageTextArea",
+        logoutBtn:"logoutButton"});
     var service = new ChatService("./chat");
 
     LoginBinder(loginView, service);
@@ -18,23 +34,14 @@ $(document).ready(function () {
 
 });
 
-$(window).unload(function(){
-    alert("Пока, пользователь!");
-});
-
 var LoginBinder = function (loginView, service) {
 
     $(document).bind(Events.LOGIN, function (e, data) {
-       service.onLogin(data);
+        service.onLogin(data);
     });
 
     $(document).bind(Events.LOGIN_FAILED, function (e, data) {
-       loginView.onLoginFailedResponse(data);
-    });
-
-
-    $(document).bind(Events.SIGN_UP, function (e) {
-        service.onSignUp();
+        loginView.onLoginFailedResponse(data);
     });
 
     $(document).bind(Events.LOGIN_SUCCESS, function (e, data) {
@@ -51,9 +58,9 @@ var ChatBinder = function (chatview, service) {
     });
 
 
-   $(document).bind(Events.PUBLIC_MESSAGE_RESPONSE, function (e, data) {
-       console.log("bind public message");
-       chatview.onReceivePublicMessages(data);
+    $(document).bind(Events.PUBLIC_MESSAGE_RESPONSE, function (e, data) {
+        console.log("bind public message");
+        chatview.onReceivePublicMessages(data);
     });
 
     $(document).bind(Events.PRIVATE_MESSAGE_RESPONSE, function (e, data) {

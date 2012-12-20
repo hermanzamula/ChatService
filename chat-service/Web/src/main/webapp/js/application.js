@@ -1,9 +1,12 @@
 $(document).ready(function () {
+
+    //TODO: Make input params in JSON format
     var loginView = new ChatLoginView("loginFieldId", "usernameFieldId", "passwordFieldId",
             "loginButtonId",  "resolveFieldId");
-    var registrationView = new ChatRegistrationView(["regFieldId","regUsernameId", "regPasswordId",
-        "regButtonId", "regResolveId"]);
-    var chatView = new ChatFieldView("chatFieldId", "sendMessageBtn", "chatMessagesId", "messageTextArea", "logoutButton");
+    var registrationView = new ChatRegistrationView(["regFieldId","regUsernameId",
+        "regPasswordId", "regButtonId", "regResolveId", "colorInputId"]);
+    var chatView = new ChatFieldView("chatFieldId", "sendMessageBtn", "chatMessagesId",
+            "messageTextArea", "logoutButton");
     var service = new ChatService("./chat");
 
     LoginBinder(loginView, service);
@@ -73,6 +76,7 @@ var RegistrationBinder = function (regview, service) {
     $(document).bind(Events.REGISTRATION, function (e, data) {
         service.onRegistration(data);
     });
+
     $(document).bind(Events.REGISTRATION_FAILED, function (e, data) {
         regview.onRegistrationFailedResponse(data);
     });

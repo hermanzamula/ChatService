@@ -23,7 +23,7 @@ a:focus {
     border-top: solid 4px #422410;
     background: url("/recources/img/helpButton.gif") no-repeat center top;
     float: left;
-    width: 266px;
+    width: 33%;
 }
 
 .slidePanelButton {
@@ -49,7 +49,7 @@ a:focus {
     border: solid 3px #76c3dc
 }
 
-label, #usernameFieldId, #passwordFieldId, #regUsernameId, #regPasswordId {
+label, #usernameFieldId, #passwordFieldId, #regUsernameId, #regPasswordId, #colorInputId {
     margin: 0 auto;
     padding: 0;
     display: block;
@@ -142,9 +142,9 @@ label:after {
     width: 650px;
     max-width: 650px;
     float: left;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    text-overflow: clip;
+    overflow-x: scroll;
+    overflow-y: scroll;
+
 }
 
 .username {

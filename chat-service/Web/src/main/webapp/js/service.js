@@ -1,55 +1,49 @@
 var ChatService = function (chatURL) {
     this.serviceURL = chatURL;
+    if (ChatUtil.isUserEnter()) {
+        this.onReadyToChat();
+    }
 };
 
-const iMillis = 2000;
+const REQUEST_TIME = 1000;
 
 ChatService.prototype.startReceivePrivateMessage = function () {
     var instance = this;
     var timeFunc = function () {
-        instance.postJSON(instance, "/messages/private/receive/", instance.userData, function (data) {
+        instance.postJSON(instance, "/messages/private/receive/", ChatUtil.getGlobalUserData(), function (data) {
             var response = JSON.parse(JSON.stringify(data));
-
             if (response.empty == false) {
-
                 console.log(JSON.stringify(data.messages[0]));
-
-                ServiceTriggers.triggerGetPublicMessageResponse(response.messages);
+                ServiceTriggers.triggerGetPublicMessageResponse(ChatUtil.fromPrivateMessagesResponse(response));
             } else {
                 //console.log(JSON.stringify(data));
             }
         });
     };
-    this.receivePrivateIntervalID = window.setInterval(timeFunc, iMillis);
+    this.receivePrivateIntervalID = window.setInterval(timeFunc, REQUEST_TIME);
 
 };
 
 ChatService.prototype.startReceivePublicMessage = function () {
     var instance = this;
     var timeFunc = function () {
-        instance.postJSON(instance, "/messages/receive/", instance.userData, function (data) {
+        instance.postJSON(instance, "/messages/receive/", ChatUtil.getGlobalUserData(), function (data) {
             var response = JSON.parse(JSON.stringify(data));
             if (response.empty == false) {
-                ServiceTriggers.triggerGetPublicMessageResponse(response.messages);
+                ServiceTriggers.triggerGetPublicMessageResponse(ChatUtil.fromPublicMessagesResponse(response));
             } else {
                 //console.log(JSON.stringify(data));
             }
         });
     };
-    this.receivePublicIntervalID = window.setInterval(timeFunc, iMillis);
+    this.receivePublicIntervalID = window.setInterval(timeFunc, REQUEST_TIME);
 };
 
 ChatService.prototype.onSendPublicMessage = function (messageData) {
     var instance = this;
-
-    //TODO: make separate class for 'request'
-    var request = {
-        username:this.userData.username,
-        text:messageData.message
-    };
-
-
-    this.postJSON(instance, "/messages/", request, function () {
+    messageData.username = GlobalUserData.getUsername();
+    console.log(messageData.username);
+    this.postJSON(instance, "/messages/", messageData, function () {
         console.log("message has been sent");
     });
 };
@@ -63,14 +57,8 @@ ChatService.prototype.postJSON = function (instance, uri, data, onsuccess) {
 
 ChatService.prototype.onSendPrivateMessage = function (privateMessageData) {
     var instance = this;
-    //TODO: make separate class for 'request'
-    var request = {
-        username:this.userData.username,
-        recipient:privateMessageData.recipient,
-        text:privateMessageData.message
-    };
-
-    this.postJSON(instance, "/messages/private/", request, function (data) {
+    privateMessageData.from = GlobalUserData.getUsername();
+    this.postJSON(instance, "/messages/private/", privateMessageData, function (data) {
         console.log("private message has been sent");
         var response = JSON.parse(data);
         ServiceTriggers.triggerSendPrivateMessageResponse(response);
@@ -80,51 +68,51 @@ ChatService.prototype.onSendPrivateMessage = function (privateMessageData) {
 ChatService.prototype.onLogin = function (userData) {
     var instance = this;
     console.log(" try login: " + JSON.stringify(userData));
+    if (ChatUtil.isUserEnter()) {
+        this.onLogout();
+    }
     this.postJSON(instance, "/user/login/", userData, function (data) {
         var response = JSON.parse(JSON.stringify(data));
+        loginResponse = ChatUtil.fromLoginResponse(response);
         console.log("User " + response.username + " enter." + response.ok + JSON.stringify(data));
         if (response.ok) {
-            //ServiceTriggers.triggerRegistrationResponse(response);
-            ServiceTriggers.triggerRegistrationSuccessEvent(response);
+            ServiceTriggers.triggerLoginSuccessEvent(loginResponse);
         } else {
-            ServiceTriggers.triggerRegistrationFailedEvent(response);
+            ServiceTriggers.triggerLoginFailedEvent(loginResponse);
         }
     });
 };
 
 ChatService.prototype.onRegistration = function (userData) {
-    var instance = this;
-    this.postJSON(instance, "/user/registration/", userData, function (data) {
+    var self = this;
+    if (ChatUtil.isUserEnter()) {
+        this.onLogout();
+    }
+    this.postJSON(self, "/user/registration/", userData, function (data) {
         var response = JSON.parse(JSON.stringify(data));
+        var regResponse = ChatUtil.fromRegistrationResponse(response);
         console.log("User " + response.username + " has been registered and enter.");
         if (response.ok) {
-            ServiceTriggers.triggerRegistrationSuccessEvent(response);
+            ServiceTriggers.triggerRegistrationSuccessEvent(regResponse);
         } else {
-            ServiceTriggers.triggerRegistrationFailedEvent(response);
+            ServiceTriggers.triggerRegistrationFailedEvent(regResponse);
         }
     });
 };
 
-ChatService.prototype.onSignUp = function () {
-    //location.href = "/registration.html";
-};
-
 
 ChatService.prototype.onRegistrationSuccess = function (data) {
-    var userData = new UserData(data.username, data.color);
-    this.onLoginSuccess(userData);
+    this.onLoginSuccess(ChatUtil.toRegistrationRequest(data.username, data.password));
 };
 
 ChatService.prototype.onLogout = function () {
     var instance = this;
-    window.clearInterval(this.receivePrivateIntervalID);
-    window.clearInterval(this.receivePublicIntervalID);
-    this.postJSON(instance, "/user/logout/", this.userData, function (data) {
+    this.postJSON(instance, "/user/logout/", ChatUtil.getGlobalUserData(), function (data) {
         var response = JSON.parse(JSON.stringify(data));
         console.log(JSON.stringify(data) + ": logout");
         ServiceTriggers.triggerLogoutResponse(response);
     });
-    this.userData = null;
+    this.onExitFromChat();
 };
 
 ChatService.prototype.onGetUserListRequest = function () {
@@ -139,7 +127,17 @@ ChatService.prototype.onGetUserListRequest = function () {
 
 
 ChatService.prototype.onLoginSuccess = function (userData) {
-    this.userData = userData;
+    GlobalUserData(userData.username, userData.color);
+    this.onReadyToChat();
+};
+
+ChatService.prototype.onReadyToChat = function () {
     this.startReceivePrivateMessage();
     this.startReceivePublicMessage();
+};
+
+ChatService.prototype.onExitFromChat = function () {
+    window.clearInterval(this.receivePrivateIntervalID);
+    window.clearInterval(this.receivePublicIntervalID);
+    GlobalUserData.clear();
 };

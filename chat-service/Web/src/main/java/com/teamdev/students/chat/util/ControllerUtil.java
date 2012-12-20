@@ -81,7 +81,7 @@ public class ControllerUtil {
 	public static UserListResponse toUserListResponse(Collection<User> userList) {
 		final Collection<UserData> users = new ArrayList<UserData>();
 		for (User user : userList) {
-			users.add(new UserData(user.getName(), user.getId(), user.getColor()));
+			users.add(new UserData(user.getName(), user.getColor()));
 		}
 		return new UserListResponse(users);
 	}

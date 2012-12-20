@@ -8,6 +8,7 @@ import com.teamdev.students.chat.controller.dto.response.UserRegistrationRespons
 import com.teamdev.students.chat.controller.dto.response.UserResponse;
 import com.teamdev.students.chat.data.User;
 import com.teamdev.students.chat.service.ChatService;
+import com.teamdev.students.chat.service.UserSession;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,7 @@ public class UserController {
 	@Inject
 	private ChatService service;
 
+
 	private static final Logger LOGGER = Logger.getLogger(UserController.class);
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -31,7 +33,7 @@ public class UserController {
 	@ResponseBody
 	public UserResponse login(@RequestBody UserLoginRequest request) {
 		final String username = request.getUsername();
-		LOGGER.debug("\n User " + username + " trying enter to chat");
+		LOGGER.debug("\n User " + request.getUsername() + " trying enter to chat");
 		final boolean success = service.enterChat(username, request.getPassword());
 		String color;
 		if (success) {

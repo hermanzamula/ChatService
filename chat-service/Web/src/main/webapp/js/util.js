@@ -1,16 +1,8 @@
-/**
- * Created with IntelliJ IDEA.
- * User: Zamula
- * Date: 17.12.12
- * Time: 18:59
- * To change this template use File | Settings | File Templates.
- */
-
 var Events = {
     SEND_PUBLIC_MESSAGE:"send-public-message",
     SEND_PRIVATE_MESSAGE:"send-private-message",
     SIGN_UP:"sign-up",
-    LOGIN:"sign-out",
+    LOGIN:"login",
     LOGOUT:"logout",
     REGISTRATION:"registration",
     PUBLIC_MESSAGE_RESPONSE:"public-message-response",
@@ -113,10 +105,85 @@ ServiceTriggers.triggerGetPrivateMessageResponse = function (responseData) {
     $(document).trigger(Events.PRIVATE_MESSAGE_RESPONSE, [responseData]);
 };
 
-var Util = function () {
-}            ;
+var ChatUtil = function () {
+};
 
-Util.isPrivateMessage = function (message) {
+ChatUtil.isPrivateMessage = function (message) {
     //TODO: add body
     return false;
+};
+
+/*
+ returns array of public messages (PublicMessage)
+ */
+ChatUtil.fromPublicMessagesResponse = function (data) {
+    return data.messages;
+};
+
+/*
+ returns array of private messages (PrivateMessage)
+ */
+ChatUtil.fromPrivateMessagesResponse = function (data) {
+    return data.messages;
+};
+
+/*
+ returns LoginResponse
+ */
+ChatUtil.fromLoginResponse = function (data) {
+    return new LoginResponse(data.username, data.color);
+};
+
+/*
+ returns RegistrationResponse
+ */
+ChatUtil.fromRegistrationResponse = function (data) {
+    return new RegistrationResponse(data.username, data.color, data.text);
+};
+
+/*
+ return array of UserData
+ */
+ChatUtil.fromGetUserListResponse = function (data) {
+    return data.users;
+};
+/*
+ return LoginRequest
+ */
+
+ChatUtil.toLoginRequest = function (username, password) {
+    return new LoginRequest(username, password);
+};
+
+/*
+ return RegistrationRequest
+ */
+ChatUtil.toRegistrationRequest = function (username, password, color) {
+    return new RegistrationRequest(username, password, color);
+};
+
+/*
+ return PublicMessage
+ */
+ChatUtil.toPublicMessageRequest = function (text, from) {
+    text = ChatUtil.escapeForbiddenElements(text);
+    return new PublicMessage(from, text);
+};
+
+ChatUtil.toPrivateMessageRequest = function (text, from, recipient) {
+    text = ChatUtil.escapeForbiddenElements(text);
+    return new PrivateMessage(text, from, recipient);
+};
+
+ChatUtil.escapeForbiddenElements = function (text) {
+    return text.replace(/<[^\s].*?>/g, "<esctag>");
+};
+
+ChatUtil.getGlobalUserData = function () {
+    return new TransferUserData(GlobalUserData.getUsername(), GlobalUserData.getColor());
+};
+
+ChatUtil.isUserEnter = function(){
+    var username = GlobalUserData.getUsername();
+    return  username!=null;
 };

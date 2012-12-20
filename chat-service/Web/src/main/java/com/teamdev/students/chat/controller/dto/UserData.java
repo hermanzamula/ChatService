@@ -3,7 +3,6 @@ package com.teamdev.students.chat.controller.dto;
 
 public class UserData {
     private String username;
-    private Long id;
 	private  String color;
 
 	public String getColor() {
@@ -14,13 +13,6 @@ public class UserData {
 		this.color = color;
 	}
 
-	public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getUsername() {
 
@@ -31,10 +23,9 @@ public class UserData {
         this.username = username;
     }
 
-    public UserData(String username, Long id, String  color) {
+    public UserData(String username,  String  color) {
 
         this.username = username;
-        this.id = id;
 		this.color = color;
     }
 }

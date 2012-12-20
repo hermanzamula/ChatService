@@ -1,70 +1,72 @@
-var UserRegistrationData = function (login, pass, color) {
-    this.username = login;
-    this.password = pass;
+var LoginResponse = function (username, color) {
+    this.username = username;
     this.color = color;
 };
 
-var UserData = function(login, color){
-    this. username = login;
-    this. color = color;
-};
-
-var UserRequest = function (username) {
+//TODO solve problem with inheritance
+var RegistrationResponse = function (username, color, text) {
     this.username = username;
+    this.color = color;
+    this.text = text;
 };
 
-var UserDataForUserList = function (jsonData) {
-    var jsonMessage = JSON.parse(jsonData);
-    this.id = jsonMessage.id;
-    this.user = jsonMessage.username;
+
+var LoginRequest = function (username, password) {
+    this.username = username;
+    this.password = password;
 };
 
-var UserResponseData = function (jsonData) {
-    var jsonLoginData = JSON.parse(JSON.stringify(jsonData));
-    this.ok = jsonLoginData.ok;
-    this.username = jsonLoginData.username;
-    //this.color = jsonLoginData.color;
+var RegistrationRequest = function (username, password, color) {
+    this.username = username;
+    this.password = password;
+    this.color = color;
 };
 
-var UserRegistrationResponseData = function (jsonData) {
-    this.prototype = UserResponseData(jsonData);
-    var jsonResponseData = JSON.parse(jsonData);
-    this.message = jsonResponseData.message;
+
+var PublicMessage = function (username, text) {
+    this.username = username;
+    this.text = text;
 };
 
-var MessageData = function (userData, message) {
-    this.userData = userData;
-    this.message = message;
+var PrivateMessage = function (text, recipient, from) {
+    this.username = recipient;
+    this.text = text;
+    this.from = from;
 };
 
-var MessageResponse = function (jsonData) {
-    var jsonMessageData = JSON.parse(jsonData);
-    this.username = jsonMessageData.username;
-    this.date = jsonMessageData.date;
-    this.text = jsonMessageData.text;
+
+var TransferUserData = function (username, color) {
+    this.username = username;
+    this.color = color;
 };
 
-var PrivateMessageResponse = function (jsonData) {
-    this.prototype = MessageResponse(jsonData);
-    var jsonMessageData = JSON.parse(jsonData);
-    this.from = jsonMessageData.from;
+GlobalUserData = function (login, color) {
+    $.cookie(GlobalUserData.DATA_KEY, new LoginResponse(login, color));
 };
 
-var PrivateMessageResponseList = function (jsonData) {
-    var jsonMessageData = JSON.parse(jsonData);
-    this.empty = jsonMessageData.empty;
-    this.messages = jsonMessageData.messages;
+GlobalUserData.getUsername = function () {
+    $.cookie.json = true;
+    console.log(JSON.stringify($.cookie(GlobalUserData.DATA_KEY)));
+    var username ;
+    try {
+      username = $.cookie(GlobalUserData.DATA_KEY).username;
+    } catch (exeption) {
+        return  null;
+    }
+    return username;
 };
 
-var ChangesResponse = function (jsonData) {
-    var jsonMessageData = JSON.parse(jsonData);
-    this.noChanges = jsonMessageData.noChanges;
-    this.changeMessages = jsonMessageData.changeMessages;
+GlobalUserData.getColor = function () {
+    $.cookie.json = true;
+    return  $.cookie(GlobalUserData.DATA_KEY).color;
 };
 
-var UserListResponse = function (jsonData) {
-    var jsonMessageData = JSON.parse(jsonData);
-    this.users = jsonMessageData.users;
+GlobalUserData.clear = function () {
+    $.removeCookie(GlobalUserData.DATA_KEY);
 };
+
+GlobalUserData.DATA_KEY = 'chat-user-data';
+
+
 
 

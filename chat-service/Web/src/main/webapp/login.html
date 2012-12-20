@@ -4,12 +4,15 @@
 <head>
     <title>Chat</title>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
+    <script src="js/lib/jquery.cookie.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/lib/spectrum/spectrum.js"></script>
     <script type="text/javascript" src="js/util.js"></script>
     <script type="text/javascript" src="js/model.js"></script>
     <script type="text/javascript" src="js/chatview.js"></script>
     <script type="text/javascript" src="js/service.js"></script>
     <script type="text/javascript" src="js/application.js"></script>
     <link rel="stylesheet" href="stylesheet/style.css">
+    <link rel="stylesheet" href="js/lib/spectrum/spectrum.css">
 </head>
 <body>
 <span class="slide"><a href="#" id="loginPanelButtonId" class="slidePanelButton">Login</a></span>
@@ -30,6 +33,7 @@
 <div id="regFieldId" class="slidePanel">
     <label for="regUsernameId">You login</label><input type="text" id="regUsernameId"><br/>
     <label for="regPasswordId">You password</label><input type="text" id="regPasswordId"> <br/>
+    <label for="colorInputId">Choose color</label><input type="text" id="colorInputId"><br/>
     <a href="#" id="regButtonId" class="chatButton">Register</a>
 
     <div id="regResolveId"></div>
@@ -42,9 +46,7 @@
 <br/>
 
 <div id="chatFieldId">
-    <div id="chatMessagesId" style="overflow-y: scroll;">
-
-    </div>
+    <div id="chatMessagesId" style="overflow-y: scroll;"></div>
     <div id="usersMessagesId"></div>
     <div id="inputMessageId">
         <label for="messageTextArea"> </label>

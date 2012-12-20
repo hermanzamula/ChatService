@@ -46,7 +46,6 @@ GlobalUserData = function (login, color) {
 
 GlobalUserData.getUsername = function () {
     $.cookie.json = true;
-    console.log(JSON.stringify($.cookie(GlobalUserData.DATA_KEY)));
     var username ;
     try {
       username = $.cookie(GlobalUserData.DATA_KEY).username;

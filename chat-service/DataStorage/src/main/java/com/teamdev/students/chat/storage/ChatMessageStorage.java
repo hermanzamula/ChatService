@@ -4,19 +4,15 @@ import com.teamdev.students.chat.data.Message;
 import com.teamdev.students.chat.data.PrivateMessage;
 import com.teamdev.students.chat.data.User;
 
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 public interface ChatMessageStorage {
 
 	void add(Message message);
 
-
 	List<Message> getLastsPublicAfter(final long messageId);
 
-	 List<PrivateMessage> getLastsPrivateAfter(long messageId, User user);
-
+	List<PrivateMessage> getLastsPrivateAfter(long messageId, User user);
 
 	long getLastMessageId();
 

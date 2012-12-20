@@ -13,17 +13,6 @@ public class UserMapStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<Long, User>();
     private  long userIdIncrement = 0 ;
 
-    public UserMapStorage() {
-		++ userIdIncrement;
-        users.put(userIdIncrement, new User(userIdIncrement, "Gogol", "Nikolai", "red"));
-		++ userIdIncrement;
-        users.put(userIdIncrement, new User(userIdIncrement, "Tolstoy", "Lev", "black"));
-		++userIdIncrement;
-        users.put(userIdIncrement, new User(userIdIncrement, "Lermontov", "Yuri", "blue"));
-		++ userIdIncrement;
-        users.put(userIdIncrement, new User(userIdIncrement, "Pushkin", "Alexandr", "pink"));
-    }
-
     @Override
     public void add(User user) {
         user.setId(++userIdIncrement);

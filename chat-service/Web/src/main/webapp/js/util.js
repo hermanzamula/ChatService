@@ -10,7 +10,6 @@ var Events = {
     REGISTRATION_RESPONSE:"registration-response",
     LOGIN_RESPONSE:"login-response",
     GET_USER_LIST_RESPONSE:"get-user-list-response",
-    GET_USER_LIST_REQUEST:"get-user-list-request",
     LOGOUT_RESPONSE:"logout-response",
     LOGIN_SUCCESS:"login-success",
     LOGIN_FAILED:"login-failed",
@@ -20,10 +19,6 @@ var Events = {
 };
 
 ViewTriggers = function () {
-};
-
-ViewTriggers.triggerSignUpEvent = function () {
-    $(document).trigger(Events.SIGN_UP);
 };
 
 ViewTriggers.triggerLoginRequestEvent = function (loginData) {
@@ -49,7 +44,7 @@ ChattingTriggers.triggerSendPrivateMessageEvent = function (messageData) {
 };
 
 ChattingTriggers.triggerLogoutEvent = function (data) {
-    console.log("trigger logout");
+
     $(document).trigger(Events.LOGOUT, data);
 };
 
@@ -78,7 +73,6 @@ ServiceTriggers.triggerRegistrationFailedEvent = function (data) {
 
 ServiceTriggers.triggerRegistrationResponse = function (registrationResponseData) {
     $(document).trigger(Events.REGISTRATION_RESPONSE, [registrationResponseData]);
-    console.log(JSON.stringify(registrationResponseData) + " has been triggered");
 };
 
 ServiceTriggers.triggerLoginResponse = function (userResponse) {
@@ -96,7 +90,6 @@ ServiceTriggers.triggerGetPublicMessageResponse = function (publicMessageRespons
 ServiceTriggers.triggerUserListResponse = function (userListResponse) {
     $(document).trigger(Events.GET_USER_LIST_RESPONSE, [userListResponse]);
 };
-
 
 ServiceTriggers.triggerLogoutResponse = function (responseData) {
     $(document).trigger(Events.LOGOUT_RESPONSE, [responseData]);
@@ -193,7 +186,7 @@ ChatUtil.isUserEnter = function () {
     return  username != null;
 };
 
-ChatUtil.clearFields = function (fields) {
+ChatUtil.clearInput = function (fields) {
     for (var i = 0; i < fields.length; i++) {
         $(fields[i]).val("");
     }

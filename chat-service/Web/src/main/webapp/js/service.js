@@ -6,6 +6,7 @@ var ChatService = function (chatURL) {
 };
 
 const REQUEST_TIME = 1000;
+const GET_USER_LIST_REQUEST = REQUEST_TIME * 5;
 
 ChatService.prototype.startReceivePrivateMessage = function () {
     var instance = this;
@@ -40,7 +41,6 @@ ChatService.prototype.startReceivePublicMessage = function () {
 ChatService.prototype.onSendPublicMessage = function (messageData) {
     var instance = this;
     messageData.username = GlobalUserData.getUsername();
-    console.log(messageData.username);
     this.postJSON(instance, "/messages/", messageData, function () {
         console.log("message has been sent");
     });
@@ -65,7 +65,6 @@ ChatService.prototype.onSendPrivateMessage = function (privateMessageData) {
 
 ChatService.prototype.onLogin = function (userData) {
     var instance = this;
-    console.log(" try login: " + JSON.stringify(userData));
     if (ChatUtil.isUserEnter()) {
         this.onLogout();
     }
@@ -89,7 +88,6 @@ ChatService.prototype.onRegistration = function (userData) {
     this.postJSON(self, "/user/registration/", userData, function (data) {
         var response = JSON.parse(JSON.stringify(data));
         var regResponse = ChatUtil.fromRegistrationResponse(response);
-        console.log("User " + response.username + " has been registered and enter.");
         if (response.ok) {
             ServiceTriggers.triggerRegistrationSuccessEvent(regResponse);
         } else {
@@ -100,27 +98,28 @@ ChatService.prototype.onRegistration = function (userData) {
 
 
 ChatService.prototype.onRegistrationSuccess = function (data) {
-    this.onLoginSuccess(ChatUtil.toRegistrationRequest(data.username, data.password));
+    this.onLoginSuccess(ChatUtil.toRegistrationRequest(data.username, data.password, data.color));
 };
 
 ChatService.prototype.onLogout = function () {
     var instance = this;
     this.postJSON(instance, "/user/logout/", ChatUtil.getGlobalUserData(), function (data) {
         var response = JSON.parse(JSON.stringify(data));
-        console.log(JSON.stringify(data) + ": logout");
         ServiceTriggers.triggerLogoutResponse(response);
     });
     this.onExitFromChat();
 };
 
-ChatService.prototype.onGetUserListRequest = function () {
+ChatService.prototype.startReceiveUserList = function () {
     var instance = this;
     //TODO: Attention
-    this.postJSON(instance, "/user/list/", function (data) {
-        var response = JSON.parse(JSON.stringify(data));
-        console.log(JSON.stringify(data) + ": get user list");
-        ServiceTriggers.triggerUserListResponse(response);
-    });
+    var timerFunc = function () {
+        instance.postJSON(instance, "/user/list/", {}, function (data) {
+            var response = JSON.parse(JSON.stringify(data));
+            ServiceTriggers.triggerUserListResponse(ChatUtil.fromGetUserListResponse(response));
+        });
+    };
+    this.receiveUserListTimerId = setInterval(timerFunc, GET_USER_LIST_REQUEST);
 };
 
 
@@ -132,10 +131,12 @@ ChatService.prototype.onLoginSuccess = function (userData) {
 ChatService.prototype.onReadyToChat = function () {
     this.startReceivePrivateMessage();
     this.startReceivePublicMessage();
+    this.startReceiveUserList();
 };
 
 ChatService.prototype.onExitFromChat = function () {
     window.clearInterval(this.receivePrivateIntervalID);
     window.clearInterval(this.receivePublicIntervalID);
+    window.clearInterval(this.receiveUserListTimerId);
     GlobalUserData.clear();
 };

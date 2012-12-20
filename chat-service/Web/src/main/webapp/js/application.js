@@ -2,27 +2,30 @@ $(document).ready(function () {
 
     //TODO: Make input params in JSON format
     var loginView = new ChatLoginView({
-        field:"loginFieldId",
-        login:"usernameFieldId",
-        password:"passwordFieldId",
-        loginBtn:"loginButtonId",
-        resolve:"resolveFieldId"
+        field: "loginFieldId",
+        login: "usernameFieldId",
+        password: "passwordFieldId",
+        loginBtn: "loginButtonId",
+        resolve: "resolveFieldId"
     });
 
     var registrationView = new ChatRegistrationView({
-        field:"regFieldId",
-        login:"regUsernameId",
-        password:"regPasswordId",
-        okBtn:"regButtonId",
-        resolve:"resolveFieldId",
-        colorInput:"colorInputId"});
+        field: "regFieldId",
+        login: "regUsernameId",
+        password: "regPasswordId",
+        okBtn: "regButtonId",
+        resolve: "resolveFieldId",
+        colorInput: "colorInputId"});
 
     var chatView = new ChatFieldView({
-        field:"chatFieldId",
-        sendBtn:"sendMessageBtn",
-        messages:"chatMessagesId",
-        inputField:"messageTextArea",
-        logoutBtn:"logoutButton"});
+        field: "chatFieldId",
+        sendBtn: "sendMessageBtn",
+        messages: "chatMessagesId",
+        inputField: "messageTextArea",
+        logoutBtn: "logoutButton",
+        logoutPanel: "logout",
+        userList: "userListId",
+        helpPanel: "helpPanel"});
     var service = new ChatService("./chat");
 
     LoginBinder(loginView, service);
@@ -31,6 +34,7 @@ $(document).ready(function () {
 
     loginView.decorate("loginPanelButtonId");
     registrationView.decorate("regPanelButtonId");
+    chatView.decorate("logoutPanelButtonId", "helpPanelButtonId");
 
 });
 
@@ -53,6 +57,11 @@ var LoginBinder = function (loginView, service) {
 };
 
 var ChatBinder = function (chatview, service) {
+
+    $(document).bind(Events.GET_USER_LIST_RESPONSE, function (e, data) {
+        chatview.setUserList(data);
+    });
+
     $(document).bind(Events.LOGOUT, function (e, data) {
         service.onLogout(data);
     });

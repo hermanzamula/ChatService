@@ -11,6 +11,13 @@ a:focus {
     outline: none;
 }
 
+a:hover{
+}
+
+#logout{
+    height:auto;
+}
+
 #helpPanel {
     background: #F0F8FF;
     height: 200px;
@@ -46,12 +53,15 @@ a:focus {
 
 #chatMessagesId {
     max-height: 400px;
-    min-height: 200px;
-    border: solid 3px #76c3dc;
+    min-height: 300px;
+    border-bottom: solid 5px #e0e6e3;
     overflow-y: scroll;
+    min-width: 85%;
+    max-width: 85%;
+    float: left;
 }
 
-label, #usernameFieldId, #passwordFieldId, #regUsernameId, #regPasswordId {
+label, input  {
     margin: 0 auto;
     padding: 0;
     display: block;
@@ -60,12 +70,10 @@ label, #usernameFieldId, #passwordFieldId, #regUsernameId, #regPasswordId {
     font-weight: bold;
     width: 25%;
 }
-
-#colorInputId {
-    margin: 0 auto;
-    padding: 0;
-    display: block;
+#chatFieldId {
+    width: auto;
 }
+
 
 label {
     color: #b4a83f;
@@ -80,11 +88,8 @@ label {
     display: none;
 }
 
-#loginButtonId, #regButtonId, #logoutButton, #loginField {
-    margin: 0 auto;
-    padding: 0;
-    display: block;
-
+#sendMessageBtn {
+    display: inline-block;
 }
 
 .chatButton {
@@ -96,18 +101,17 @@ label {
     -webkit-border-radius: 6px;
     border-radius: 6px;
     border: 1px solid #dcdcdc;
-    display: inline-block;
     color: #777777;
     font-family: arial;
     font-size: 15px;
     font-weight: bold;
-    padding: 6px 24px;
-    padding-bottom: 6px;
-    margin: 6px 6px 6px 6px;
     text-decoration: none;
     text-shadow: 1px 1px 0px #ffffff;
     width: 70px;
     text-align: center;
+    margin: 0 auto;
+    padding: 0;
+    display: block;
 }
 
 .chatButton:hover {
@@ -119,60 +123,49 @@ label {
     top: 1px;
 }
 
-label:after {
+.inputLabel:after {
     content: ": "
-}
-
-#expression {
-    width: 60%;
-    height: auto;
-    font-family: helvetica, serif;
-    font-size: 10pt;
-    color: #4682b4;
 }
 
 #expression:focus {
     background-color: #f0f8ff;
 }
 
-#calculateBtn {
-    float: right;
-    text-align: center;
-    width: auto;
-    height: auto;
-    margin: 0 auto;
-    font: bold 10pt Arial, Helvetica, sans-serif;
-    color: #4682b4;
+#messageTextArea{
+    border: solid 2px #76C3dC;
+    min-width : 65%;
+    overflow-y: scroll;
+    max-width: 85%;
 }
 
-#messageTextArea {
-    border: solid 2px #76c3dc;
-    width: auto;
-    max-width: 650px;
+#userListId{
+    border-top: solid 5px #e0e6e3;
+    max-height: 400px;
+    overflow: auto;
+    min-width: 15%;
     float: left;
-    overflow-y: scroll;
-
 }
 
 .username {
     font: bold 10pt Arial, Helvetica, sans-serif;
-    width: 80px;
+    width: 15%;
     display:  inline-block;
 }
 
 .date {
-    font: italic 12pt Arial, Helvetica, sans-serif;
+    font: bold 10pt Arial, Helvetica, sans-serif;
     display:  inline-block;
+    position: relative;
 }
 
-.messageText {
+.messageText  {
     font: normal 10pt Arial, Helvetica, sans-serif;
     display:  inline-block;
 }
 
 .messageBlock {
     display: block;
-    max-width: inherit;
+    max-width: 80%;
 }
 
 #resolveFieldId {

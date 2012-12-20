@@ -14,15 +14,30 @@ var ChatFieldView = function (properties) {
     this.chatMessagesId = "#" + properties.messages;
     this.inputFieldId = "#" + properties.inputField;
     this.logoutBtn = "#" + properties.logoutBtn;
+    this.userList = "#" + properties.userList;
+    this.helpPanel = "#" + properties.helpPanel;
+    this.logoutPanel = "#" + properties.logoutPanel;
 
-    var instance = this;
+    var self = this;
 
     $(this.sendBtnId).click(function () {
-        instance.onSendMessageRequest();
+        self.onSendMessageRequest();
     });
 
     $(this.logoutBtn).click(function () {
         ChattingTriggers.triggerLogoutEvent({});
+    });
+    //noinspection FunctionWithInconsistentReturnsJS
+    $(this.inputFieldId).keydown(function (e) {
+        var k = e.keyCode || e.which;
+        if (k == 13 && e.ctrlKey) {
+            self.onSendMessageRequest();
+            return false; // !!!
+        }
+    });
+    $("a.ulItem", this.userList).click(function () {
+        console.log(" fdsfsdfsdfsdfds    " + ($(this).text()));
+        return false;
     });
 
 };
@@ -53,7 +68,6 @@ var ChatLoginView = function (properties) {
 };
 
 
-
 /*
  required fields
  properties:
@@ -78,15 +92,12 @@ var ChatRegistrationView = function (properties) {
     $(this.okBtnId).click(function () {
         instance.onRegistrationRequest();
     });
-
-    $(this.colorInputId).spectrum({
-        color:"#f00"
-    });
 };
 
 
 ChatFieldView.prototype.onSendMessageRequest = function () {
     var message = $(this.inputFieldId).val();
+    ChatUtil.clearInput([this.inputFieldId]);
     if (ChatUtil.isPrivateMessage(message)) {
         console.log("Private message: " + message);
         var recipient = "";
@@ -98,10 +109,10 @@ ChatFieldView.prototype.onSendMessageRequest = function () {
 
 ChatFieldView.prototype.onReceivePublicMessages = function (messages) {
     for (var i = 0; i < messages.length; i++) {
-       this.appendToMessageArea(
+        this.appendToMessageArea(
             "<div class='username' style='color:" + messages[i].color + "'>" + messages[i].username +
                 "</div> at <div class = 'date'>" + messages[i].date + "</div>: <div class='messageText'>"
-                + messages[i].text + "</div><br/>"
+                + messages[i].text + "</div>"
         );
     }
 };
@@ -109,17 +120,38 @@ ChatFieldView.prototype.onReceivePublicMessages = function (messages) {
 ChatFieldView.prototype.onReceivePrivateMessages = function (privateMessages) {
     for (var i = 0; i < privateMessages.length; i++) {
         this.appendToMessageArea(
-            "<span class='username' style='color:" + privateMessages[i].color + "'>@" + privateMessages[i].username +
-                "</span> send you at <span class = 'date'>" + privateMessages[i].date + "</span>: <span class='messageText'>"
-                + privateMessages[i].text + "</span><br/>"
+            "<span class='username' style='color:" + privateMessages[i].color
+                + "'>@" + privateMessages[i].username +
+                "</span> send you at <span class = 'date'>" +
+                privateMessages[i].date + "</span>: <span class='messageText'>"
+                + privateMessages[i].text + "</span>"
         );
     }
 };
 
+ChatFieldView.prototype.setUserList = function (users) {
+    var list = "";
+    for (var i = 0; i < users.length; i++) {
+        list += "<span class='ulItem' style='color:" + users[i].color + "' id ='user" + i + "'>"
+            + users[i].username + "</span><br/>";
+    }
+    console.log(list);
+    $(this.userList).html(list);
+};
+
+ChatFieldView.prototype.decorate = function (logoutAction, helpAction) {
+    this.getHelpBtn = "#" + helpAction;
+    this.onLogoutBtn = "#" + logoutAction;
+    slideDecorator(this.onLogoutBtn, this.logoutPanel);
+    slideDecorator(this.getHelpBtn, this.helpPanel);
+    slideDecorator(this.logoutBtn, this.logoutPanel);
+};
+
 ChatFieldView.prototype.appendToMessageArea = function (html) {
-    $(this.chatMessagesId).append("<div class='messageBlock'>"+html+"</div>");
+    $(this.chatMessagesId).append("<div class='messageBlock'>" + html + "</div><br/>");
     this.downScroll();
 };
+
 
 ChatFieldView.prototype.downScroll = function () {
     $(this.chatMessagesId).scrollTop($(this.chatMessagesId)[0].scrollHeight);
@@ -136,7 +168,8 @@ ChatRegistrationView.prototype.decorate = function (regButton) {
 ChatLoginView.prototype.onLoginRequest = function () {
     var username = $(this.loginId).val();
     var password = $(this.passwordId).val();
-    ChatUtil.clearFields([this.loginId, this.passwordId]);
+    ChatUtil.clearInput([this.loginId, this.passwordId]);
+    $(this.resolveId).text("");
     ViewTriggers.triggerLoginRequestEvent(ChatUtil.toLoginRequest(username, password));
 };
 
@@ -166,8 +199,9 @@ ChatLoginView.prototype.decorate = function (actionButton) {
 ChatRegistrationView.prototype.onRegistrationRequest = function () {
     var login = $(this.regloginId).val();
     var pass = $(this.regpasswordId).val();
-    var color = $(this.colorInputId).val();
-    ChatUtil.clearFields([this.regloginId, this.regpasswordId, this.colorInputId]);
+    var color = "#" + $(this.colorInputId).val();
+    ChatUtil.clearInput([this.regloginId, this.regpasswordId, this.colorInputId]);
+    $(this.resolveFieldId).text("");
     ViewTriggers.triggerRegistrationRequestEvent(ChatUtil.toRegistrationRequest(login, pass, color));
 };
 

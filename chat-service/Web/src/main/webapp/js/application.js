@@ -2,30 +2,30 @@ $(document).ready(function () {
 
     //TODO: Make input params in JSON format
     var loginView = new ChatLoginView({
-        field: "loginFieldId",
-        login: "usernameFieldId",
-        password: "passwordFieldId",
-        loginBtn: "loginButtonId",
-        resolve: "resolveFieldId"
+        field:"loginFieldId",
+        login:"usernameFieldId",
+        password:"passwordFieldId",
+        loginBtn:"loginButtonId",
+        resolve:"resolveFieldId"
     });
 
     var registrationView = new ChatRegistrationView({
-        field: "regFieldId",
-        login: "regUsernameId",
-        password: "regPasswordId",
-        okBtn: "regButtonId",
-        resolve: "resolveFieldId",
-        colorInput: "colorInputId"});
+        field:"regFieldId",
+        login:"regUsernameId",
+        password:"regPasswordId",
+        okBtn:"regButtonId",
+        resolve:"resolveFieldId",
+        colorInput:"colorInputId"});
 
     var chatView = new ChatFieldView({
-        field: "chatFieldId",
-        sendBtn: "sendMessageBtn",
-        messages: "chatMessagesId",
-        inputField: "messageTextArea",
-        logoutBtn: "logoutButton",
-        logoutPanel: "logout",
-        userList: "userListId",
-        helpPanel: "helpPanel"});
+        field:"chatFieldId",
+        sendBtn:"sendMessageBtn",
+        messages:"chatMessagesId",
+        inputField:"messageTextArea",
+        logoutBtn:"logoutButton",
+        logoutPanel:"logout",
+        userList:"userListId",
+        helpPanel:"helpPanel"});
     var service = new ChatService("./chat");
 
     LoginBinder(loginView, service);
@@ -85,6 +85,11 @@ var ChatBinder = function (chatview, service) {
     $(document).bind(Events.SEND_PUBLIC_MESSAGE, function (e, data) {
         console.log("send public message");
         service.onSendPublicMessage(data);
+    });
+
+    $(document).bind(Events.SEND_PRIVATE_MESSAGE, function (e, data) {
+        console.log("send prvate message");
+        service.onSendPrivateMessage(data);
     });
 };
 

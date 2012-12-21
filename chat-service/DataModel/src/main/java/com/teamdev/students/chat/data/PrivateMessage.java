@@ -1,8 +1,5 @@
 package com.teamdev.students.chat.data;
 
-import com.teamdev.students.chat.data.Message;
-import com.teamdev.students.chat.data.User;
-
 import java.util.Date;
 
 public class PrivateMessage extends Message {

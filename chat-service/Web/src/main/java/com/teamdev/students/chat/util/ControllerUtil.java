@@ -42,7 +42,7 @@ public class ControllerUtil {
 	}
 
 	public static Message fromRequest(final MessagePostRequest request, User user) {
-		return new Message(UniqueIdCreator.createUniqueIndex(), request.getText(), user, new Date());
+		return new Message(IdCreator.createUniqueIndex(), request.getText(), user, new Date());
 	}
 
 	public static PrivateMessage fromPrivateRequest(final PrivateMessagePostRequest request,
@@ -51,12 +51,12 @@ public class ControllerUtil {
 		if (sender == null || recipient == null) {
 			throw new ChatServiceException("User not found");
 		}
-		return new PrivateMessage(UniqueIdCreator.createUniqueIndex(), request.getText(),
+		return new PrivateMessage(IdCreator.createUniqueIndex(), request.getText(),
 				sender, recipient, new Date());
 	}
 
 	public static User fromRequest(UserRegistrationRequest request) {
-		return new User(UniqueIdCreator.createUniqueIndex(), request.getUsername().trim(),
+		return new User(IdCreator.createUniqueIndex(), request.getUsername().trim(),
 				request.getPassword().trim(), request.getColor());
 	}
 

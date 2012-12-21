@@ -1,12 +1,13 @@
 var ChatService = function (chatURL) {
     this.serviceURL = chatURL;
     if (ChatUtil.isUserEnter()) {
+        this.getUserList(this);
         this.onReadyToChat();
     }
 };
 
-const REQUEST_TIME = 1000;
-const GET_USER_LIST_REQUEST = REQUEST_TIME * 5;
+ChatService.REQUEST_TIME = 1000;
+ChatService.GET_USERS_REQUEST_TIME = ChatService.REQUEST_TIME * 5;
 
 ChatService.prototype.startReceivePrivateMessage = function () {
     var instance = this;
@@ -14,15 +15,15 @@ ChatService.prototype.startReceivePrivateMessage = function () {
         instance.postJSON(instance, "/messages/private/receive/", ChatUtil.getGlobalUserData(), function (data) {
             var response = JSON.parse(JSON.stringify(data));
             if (response.empty == false) {
-                console.log(JSON.stringify(data.messages[0]));
-                ServiceTriggers.triggerGetPublicMessageResponse(ChatUtil.fromPrivateMessagesResponse(response));
+
+                console.log(JSON.stringify(data));
+                ServiceTriggers.triggerGetPrivateMessageResponse(ChatUtil.fromPrivateMessagesResponse(response));
             } else {
-                //console.log(JSON.stringify(data));
+                console.log(JSON.stringify(data));
             }
         });
     };
-    this.receivePrivateIntervalID = window.setInterval(timeFunc, REQUEST_TIME);
-
+    this.receivePrivateIntervalID = window.setInterval(timeFunc, ChatService.REQUEST_TIME);
 };
 
 ChatService.prototype.startReceivePublicMessage = function () {
@@ -35,7 +36,7 @@ ChatService.prototype.startReceivePublicMessage = function () {
             }
         });
     };
-    this.receivePublicIntervalID = window.setInterval(timeFunc, REQUEST_TIME);
+    this.receivePublicIntervalID = window.setInterval(timeFunc, ChatService.REQUEST_TIME);
 };
 
 ChatService.prototype.onSendPublicMessage = function (messageData) {
@@ -55,7 +56,7 @@ ChatService.prototype.postJSON = function (instance, uri, data, onsuccess) {
 
 ChatService.prototype.onSendPrivateMessage = function (privateMessageData) {
     var instance = this;
-    privateMessageData.from = GlobalUserData.getUsername();
+    privateMessageData.username = GlobalUserData.getUsername();
     this.postJSON(instance, "/messages/private/", privateMessageData, function (data) {
         console.log("private message has been sent");
         var response = JSON.parse(data);
@@ -111,17 +112,18 @@ ChatService.prototype.onLogout = function () {
 };
 
 ChatService.prototype.startReceiveUserList = function () {
-    var instance = this;
-    //TODO: Attention
-    var timerFunc = function () {
-        instance.postJSON(instance, "/user/list/", {}, function (data) {
-            var response = JSON.parse(JSON.stringify(data));
-            ServiceTriggers.triggerUserListResponse(ChatUtil.fromGetUserListResponse(response));
-        });
-    };
-    this.receiveUserListTimerId = setInterval(timerFunc, GET_USER_LIST_REQUEST);
+    var self = this;
+    this.receiveUserListTimerId = setInterval(function () {
+        self.getUserList(self);
+    }, ChatService.GET_USERS_REQUEST_TIME);
 };
 
+ChatService.prototype.getUserList = function (self) {
+    self.postJSON(self, "/user/list/", {}, function (data) {
+        var response = JSON.parse(JSON.stringify(data));
+        ServiceTriggers.triggerUserListResponse(ChatUtil.fromGetUserListResponse(response));
+    });
+};
 
 ChatService.prototype.onLoginSuccess = function (userData) {
     GlobalUserData(userData.username, userData.color);

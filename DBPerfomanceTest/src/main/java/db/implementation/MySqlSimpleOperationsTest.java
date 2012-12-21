@@ -39,7 +39,6 @@ public class MySqlSimpleOperationsTest extends AbstractDBSimpleOperations {
         final PreparedStatement preparedStatementClient = connector.getDbConnection().
                 prepareStatement("insert into client (FLM, gender, passportData, familyStatus, work, uid ) values (? , ?, ?,?,?,?)");
 
-
         final PreparedStatement preparedStatementBank = connector.getDbConnection().
                 prepareStatement(" insert into BankInfo (bankname, dateform, formfio, bankmfo) values (? , ?, ?,?)");
 
@@ -87,8 +86,6 @@ public class MySqlSimpleOperationsTest extends AbstractDBSimpleOperations {
                 prepareStatement("update  client set " +
                         "\nFLM= ? , gender = ?, passportData= ?,\n " +
                         "familyStatus = ?, work = ? where uid = ? ");
-
-
         final PreparedStatement preparedStatementBank = connector.getDbConnection().
                 prepareStatement(" update  BankInfo set BankName = ? , DateForm = ?, FormFIO =? where BankMFO = ?");
 
@@ -105,7 +102,6 @@ public class MySqlSimpleOperationsTest extends AbstractDBSimpleOperations {
         connector.getDbStatement().executeQuery("truncate table deal;");
         connector.getDbStatement().executeQuery("Truncate table BankInfo;");
         connector.getDbStatement().executeQuery("TRUNCATE  table clientdealDetail;");
-
         connector.getDbStatement().executeQuery("TRUNCATE TABLE client;");
         connector.getDbStatement().execute("SET foreign_key_checks=1;");
         return new Date().getTime() - date.getTime();

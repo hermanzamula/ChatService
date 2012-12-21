@@ -12,16 +12,13 @@ public class MongoDBSimpleOperationsTest extends AbstractDBSimpleOperations {
 
     private static final Logger LOGGER = Logger.getLogger(MongoDBSimpleOperationsTest.class);
     public static final String HOST_PATH = "localhost";
-
     private DB mongoDB;
 
     @Override
     protected long select() throws Exception {
         Date date = new Date();
         final DBCursor cursor = mongoDB.getCollection(TEST_TABLE_NAME).find();
-
         //System.out.println(cursor.toArray());
-
         return new Date().getTime() - date.getTime();
     }
 
@@ -31,7 +28,6 @@ public class MongoDBSimpleOperationsTest extends AbstractDBSimpleOperations {
     protected void createTestTable() throws Exception {
         collection = mongoDB.getCollection(TEST_TABLE_NAME);
     }
-
 
     public MongoDBSimpleOperationsTest(final String dbName) {
         try {
@@ -62,8 +58,8 @@ public class MongoDBSimpleOperationsTest extends AbstractDBSimpleOperations {
         final Date date = new Date();
 
         for (int i = 0; i < operationNum; i++) {
-            /* collection.update(new BasicDBObject("client", new BasicDBObject("UID", i)),
-     new BasicDBObject("client", new BasicDBObject("UID", operationNum - i))); */
+            collection.update(new BasicDBObject("client", new BasicDBObject("UID", i)),
+     new BasicDBObject("client", new BasicDBObject("UID", operationNum - i)));
         }
         return new Date().getTime() - date.getTime();
     }

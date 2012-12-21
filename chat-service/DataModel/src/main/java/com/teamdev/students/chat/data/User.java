@@ -50,6 +50,6 @@ public class User implements Comparable<User> {
 
 	@Override
 	public int compareTo(User o) {
-		return Long.compare(o.getId(), o.getId());
+		return Long.compare(this.getId(), o.getId());
 	}
 }

@@ -35,11 +35,6 @@ var ChatFieldView = function (properties) {
             return false; // !!!
         }
     });
-    $("a.ulItem", this.userList).click(function () {
-        console.log(" fdsfsdfsdfsdfds    " + ($(this).text()));
-        return false;
-    });
-
 };
 
 
@@ -98,9 +93,10 @@ var ChatRegistrationView = function (properties) {
 ChatFieldView.prototype.onSendMessageRequest = function () {
     var message = $(this.inputFieldId).val();
     ChatUtil.clearInput([this.inputFieldId]);
+    //TODO: Move conditions into service
     if (ChatUtil.isPrivateMessage(message)) {
-        console.log("Private message: " + message);
-        var recipient = "";
+        var recipient = ChatUtil.findRecipient(message);
+        message = ChatUtil.getMessageBody(message);
         ChattingTriggers.triggerSendPrivateMessageEvent(ChatUtil.toPrivateMessageRequest(message, recipient));
     } else {
         ChattingTriggers.triggerSendPublicMessageEvent(ChatUtil.toPublicMessageRequest(message));
@@ -121,8 +117,8 @@ ChatFieldView.prototype.onReceivePrivateMessages = function (privateMessages) {
     for (var i = 0; i < privateMessages.length; i++) {
         this.appendToMessageArea(
             "<span class='username' style='color:" + privateMessages[i].color
-                + "'>@" + privateMessages[i].username +
-                "</span> send you at <span class = 'date'>" +
+                + "'>&gt&gt" + privateMessages[i].username +
+                "</span> at <span class = 'date'>" +
                 privateMessages[i].date + "</span>: <span class='messageText'>"
                 + privateMessages[i].text + "</span>"
         );
@@ -135,7 +131,6 @@ ChatFieldView.prototype.setUserList = function (users) {
         list += "<span class='ulItem' style='color:" + users[i].color + "' id ='user" + i + "'>"
             + users[i].username + "</span><br/>";
     }
-    console.log(list);
     $(this.userList).html(list);
 };
 

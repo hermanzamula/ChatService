@@ -20,23 +20,18 @@ public class UserMapStorage implements UserStorage {
     }
 
     @Override
-    public User get(Long userId) {
-        return users.get(userId);
-    }
-
-    @Override
-    public Collection<User> getAll() {
+    public Collection<User> findAll() {
         return users.values();
     }
 
     @Override
-    public User getByName(String username) {
+    public User find(String username) {
 
         if (username == null) {
             throw new NullPointerException("[UserStorage]: Username is null!");
         }
 
-        for (User user : getAll()) {
+        for (User user : findAll()) {
             if (user.getName().equalsIgnoreCase(username)) {
                 return user;
             }

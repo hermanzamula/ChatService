@@ -33,11 +33,9 @@ public class UserController {
 		final String username = request.getUsername();
 		LOGGER.debug("\n User " + request.getUsername() + " trying enter to chat");
 		final boolean success = service.enterChat(username, request.getPassword());
-		String color;
+		String color="";
 		if (success) {
 			color = service.findUser(username).getColor();
-		} else {
-			color = "";
 		}
 		return new UserResponse(success, username, color);
 	}

@@ -8,10 +8,8 @@ public interface UserStorage {
 
     void add(User user);
 
-    User get(Long userId);
+    Collection<User> findAll();
 
-    Collection<User> getAll();
-
-    User getByName(String username);
+    User find(String username);
 
 }

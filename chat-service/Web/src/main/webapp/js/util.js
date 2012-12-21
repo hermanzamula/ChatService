@@ -36,16 +36,16 @@ ChattingTriggers = function () {
 
 
 ChattingTriggers.triggerSendPublicMessageEvent = function (messageData) {
-    $(document).trigger(Events.SEND_PUBLIC_MESSAGE, messageData);
+    $(document).trigger(Events.SEND_PUBLIC_MESSAGE, [messageData]);
 };
 
 ChattingTriggers.triggerSendPrivateMessageEvent = function (messageData) {
-    $(document).trigger(Events.SEND_PRIVATE_MESSAGE, messageData);
+    $(document).trigger(Events.SEND_PRIVATE_MESSAGE, [messageData]);
 };
 
 ChattingTriggers.triggerLogoutEvent = function (data) {
 
-    $(document).trigger(Events.LOGOUT, data);
+    $(document).trigger(Events.LOGOUT, [data]);
 };
 
 /*
@@ -106,9 +106,16 @@ ServiceTriggers.triggerGetPrivateMessageResponse = function (responseData) {
 var ChatUtil = function () {
 };
 
+ChatUtil.IS_PRIVATE_REGEXP = new RegExp(/^@.*? /);
+
+ChatUtil.findRecipient = function (message) {
+    message = message.trim();
+    return ChatUtil.IS_PRIVATE_REGEXP.exec(message).toString().replace("@", "").trim();
+};
+
 ChatUtil.isPrivateMessage = function (message) {
-    //TODO: add body
-    return false;
+    message = message.trim();
+    return ChatUtil.IS_PRIVATE_REGEXP.test(message);
 };
 
 /*
@@ -168,9 +175,9 @@ ChatUtil.toPublicMessageRequest = function (text, from) {
     return new PublicMessage(from, text);
 };
 
-ChatUtil.toPrivateMessageRequest = function (text, from, recipient) {
+ChatUtil.toPrivateMessageRequest = function (text, recipient, username) {
     text = ChatUtil.escapeForbiddenElements(text);
-    return new PrivateMessage(text, from, recipient);
+    return new PrivateMessage(text, recipient, username);
 };
 
 ChatUtil.escapeForbiddenElements = function (text) {
@@ -190,4 +197,8 @@ ChatUtil.clearInput = function (fields) {
     for (var i = 0; i < fields.length; i++) {
         $(fields[i]).val("");
     }
+};
+
+ChatUtil.getMessageBody = function (message) {
+    return message.replace(ChatUtil.IS_PRIVATE_REGEXP, "");
 };

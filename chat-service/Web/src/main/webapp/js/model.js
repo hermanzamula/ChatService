@@ -28,10 +28,10 @@ var PublicMessage = function (username, text) {
     this.text = text;
 };
 
-var PrivateMessage = function (text, recipient, from) {
-    this.username = recipient;
+var PrivateMessage = function (text, recipient, username) {
+    this.username = username;
+    this.recipient = recipient;
     this.text = text;
-    this.from = from;
 };
 
 

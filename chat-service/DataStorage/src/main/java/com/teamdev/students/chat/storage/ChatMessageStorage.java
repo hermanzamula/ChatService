@@ -10,11 +10,13 @@ public interface ChatMessageStorage {
 
 	void add(Message message);
 
-	List<Message> getLastsPublicAfter(final long messageId);
+	List<Message> findLastsPublicAfter(final long messageId);
 
-	List<PrivateMessage> getLastsPrivateAfter(long messageId, User user);
+	List<PrivateMessage> findLastsPrivateAfter(long messageId, User user);
 
 	long getLastMessageId();
+
+    long getLastPrivateMessageId();
 
 	void addPrivate(PrivateMessage message);
 }

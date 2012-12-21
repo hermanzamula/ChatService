@@ -6,13 +6,9 @@ import db.API.DBSimpleOperationsTest;
 public abstract class AbstractDBSimpleOperations implements DBSimpleOperationsTest {
 
     protected abstract void createTestTable() throws Exception;
-
     protected abstract long insert(long operationNum) throws Exception;
-
     protected abstract long update(long operationNum) throws Exception;
-
     protected abstract long delete(long operationNum) throws Exception;
-
     protected abstract long select() throws Exception;
 
     @Override
@@ -24,7 +20,7 @@ public abstract class AbstractDBSimpleOperations implements DBSimpleOperationsTe
             long update = update(numOfOperations);
             long select = select();
             long delete = delete(numOfOperations);
-            return "Insert time, ms: " + insert +
+            return this.getClass()+":Insert time, ms: " + insert +
                     "; update time, ms: " + update +
                     "; delete time, ms: " + delete + ";" +
                     " select time, ms: "  + select +

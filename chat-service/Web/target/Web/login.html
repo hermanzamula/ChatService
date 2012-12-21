@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Chat</title>
+    <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>    -->
+    <script type="text/javascript" src="js/lib/jquery.js"></script>
+    <script src="js/lib/jquery.cookie.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/lib/jscolor/jscolor.js"></script>
+    <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/model.js"></script>
+    <script type="text/javascript" src="js/chatview.js"></script>
+    <script type="text/javascript" src="js/service.js"></script>
+    <script type="text/javascript" src="js/application.js"></script>
+    <link rel="stylesheet" href="stylesheet/style.css">
+</head>
+<body>
+<span class="slide"><a href="#" id="loginPanelButtonId" class="slidePanelButton">Login</a></span>
+<span class="slide"><a href="#" id="regPanelButtonId" class="slidePanelButton">SignUp</a></span>
+<span class="slide"><a href="#" id="logoutPanelButtonId" class="slidePanelButton">Logout</a></span>
+<span class="slide"><a href="#" id="helpPanelButtonId" class="slidePanelButton">Help</a></span>
+<br/>
+
+<div id="loginFieldId" class="slidePanel">
+    <label for="usernameFieldId" class="inputLabel">Login</label>
+    <input type="text" id="usernameFieldId"><br/>
+    <label for="passwordFieldId" class="inputLabel">Password</label>
+    <input type="password" id="passwordFieldId"><br/>
+    <a href="#" id="loginButtonId" class="chatButton">Login</a>
+</div>
+<br/>
+
+<div id="regFieldId" class="slidePanel">
+    <label for="regUsernameId" class="inputLabel">Your login</label>
+    <input type="text" id="regUsernameId" maxlength="12"><br/>
+    <label for="regPasswordId" class="inputLabel">Your password</label>
+    <input type="password" id="regPasswordId"> <br/>
+    <label for="colorInputId" class="inputLabel">Choose color</label>
+    <input type="text" value="#ABCDEF" id="colorInputId" class="color"><br/>
+    <a href="#" id="regButtonId" class="chatButton">Register</a>
+</div>
+<br/>
+
+<div id="logout" class="slidePanel">
+    <label style="text-align: center">Bye-bye</label><br/>
+    <a href="#" id="logoutButton" class="chatButton">Logout</a>
+</div>
+<br/>
+
+<div id="helpPanel" class="slidePanel"></div>
+<br/>
+
+<div id="resolveFieldId"></div>
+<br/>
+
+<div id="chatFieldId">
+    <div id="chatMessagesId"></div>
+    <div id="userListId"><a class="ulItem"></a></div>
+    <div id="inputMessageId">
+        <label for="messageTextArea"> </label>
+        <textarea rows="3" cols="50" id="messageTextArea"></textarea>
+        <a href="#" id="sendMessageBtn" class="chatButton">Send</a>
+    </div>
+</div>
+</body>
+</html>

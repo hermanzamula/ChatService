@@ -1,7 +1,5 @@
 package com.teamdev.students.chat.data;
 
-import com.teamdev.students.chat.data.User;
-
 import java.util.Date;
 
 public class Message implements Comparable<Date> {
@@ -44,8 +42,8 @@ public class Message implements Comparable<Date> {
         return postedAt;
     }
 
-	@Override
-	public int compareTo(Date o) {
-		return postedAt.compareTo(o);
-	}
+    @Override
+    public int compareTo(Date o) {
+        return postedAt.compareTo(o);
+    }
 }

@@ -29,7 +29,6 @@ ViewTriggers.triggerRegistrationRequestEvent = function (data) {
     $(document).trigger(Events.REGISTRATION, [data]);
 };
 
-
 ChattingTriggers = function () {
 
 };
@@ -106,7 +105,7 @@ ServiceTriggers.triggerGetPrivateMessageResponse = function (responseData) {
 var ChatUtil = function () {
 };
 
-ChatUtil.IS_PRIVATE_REGEXP = new RegExp(/^@.*? /);
+ChatUtil.IS_PRIVATE_REGEXP = new RegExp(/^@[^\s].*? /);
 
 ChatUtil.findRecipient = function (message) {
     message = message.trim();

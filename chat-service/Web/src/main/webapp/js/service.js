@@ -15,11 +15,8 @@ ChatService.prototype.startReceivePrivateMessage = function () {
         instance.postJSON(instance, "/messages/private/receive/", ChatUtil.getGlobalUserData(), function (data) {
             var response = JSON.parse(JSON.stringify(data));
             if (response.empty == false) {
-
                 console.log(JSON.stringify(data));
                 ServiceTriggers.triggerGetPrivateMessageResponse(ChatUtil.fromPrivateMessagesResponse(response));
-            } else {
-                console.log(JSON.stringify(data));
             }
         });
     };

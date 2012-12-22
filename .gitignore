@@ -1,0 +1,11 @@
+/chat-service/Web/*.iml
+/chat-service/.idea
+/chat-service/Web/target
+/chat-service/DataStorage/*.iml
+/chat-service/DataModel/*.iml 
+/chat-service/*.iml
+/chat-service/.idea/artifacts
+/chat-service/.idea/copyright
+/chat-service/.idea/libraries
+/chat-service/.idea/scopes
+/chat-service/.idea/libraries
